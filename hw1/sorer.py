@@ -42,11 +42,42 @@ def format_all_rows(lo_file_text):
         formatted_text.append(re.findall(r'\<([^>]*)\>', x))
     return formatted_text
 
-def get_longest_row(lo_file_text):
-    #maxRow = max((x) for x in lo_file_text)
-    maxLength = max(len(x) for x in lo_file_text)
 
-    return maxLength
+def get_longest_row(lo_file_text):
+    return max(len(x) for x in lo_file_text)
+
+
+def string_to_type(raw_string):
+    if re.search('[a-zA-Z]', raw_string):
+        return 'String'
+    elif re.search('[+|-]?[0-9]*\.[0-9]*', raw_string):
+        return 'Float'
+    elif re.search('[0|1]', raw_string):
+        return 'Bool'
+    elif re.search('[0-9]*', raw_string):
+        return 'Int'
+    else:
+        return Missing.get_instance()
+
+
+def determine_column_types(unparsed_list, size):
+    column_indx_remaining = list(range(size))
+    column_types = dict.fromkeys((list(range(size))), None)
+    for row in unparsed_list:
+        i = 0
+        if not column_indx_remaining:
+            break
+        while len(row) > column_indx_remaining[i]:
+            type_of_index = string_to_type(row[column_indx_remaining[i]])
+            if not Missing.get_instance().equals(type_of_index):
+                column_types[column_indx_remaining.pop(i)] = type_of_index
+            else:
+                i += 1
+            if not column_indx_remaining:
+                break
+    print(column_types)
+    return column_types
+
 
 if __name__ == "__main__":
     args = parse_arguments().parse_args()
@@ -56,6 +87,7 @@ if __name__ == "__main__":
     for x in test:
         sor_df.add_row(x)
     print(sor_df.rows)
+    determine_column_types(sor_df.rows, get_longest_row(sor_df.rows))
     # print(get_longest_row(test))
     # for x in test:
     #     for y in x:
