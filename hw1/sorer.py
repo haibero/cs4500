@@ -1,3 +1,5 @@
+from dataframe import DataFrame
+from missing import Missing
 import argparse
 import re
 
@@ -37,11 +39,25 @@ def read_file(file_path, bytes_to_read, start_byte):
 def format_all_rows(lo_file_text):
     formatted_text = []
     for x in lo_file_text:
-        formatted_text.append(re.findall(r'\<([^>]+)\>', x))
-    print(formatted_text)
+        formatted_text.append(re.findall(r'\<([^>]*)\>', x))
+    return formatted_text
+
+def get_longest_row(lo_file_text):
+    #maxRow = max((x) for x in lo_file_text)
+    maxLength = max(len(x) for x in lo_file_text)
+
+    return maxLength
 
 if __name__ == "__main__":
     args = parse_arguments().parse_args()
     file_txt = read_file(file_path=args.f, bytes_to_read=args.len, start_byte=args.start)
-    format_all_rows(file_txt)
+    test = format_all_rows(file_txt)
+    sor_df = DataFrame()
+    for x in test:
+        sor_df.add_row(x)
+    print(sor_df.rows)
+    # print(get_longest_row(test))
+    # for x in test:
+    #     for y in x:
+    #         print(type(y))
 
