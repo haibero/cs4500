@@ -3,7 +3,7 @@ from missing import Missing
 
 class DataFrame:
     def __init__(self):
-        self.column_types = []
+        self.column_types = {}
         self.rows = []
 
     def set_column_types(self, new_column_types):

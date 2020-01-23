@@ -6,12 +6,12 @@ import re
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="SoRer arg parser");
-    parser.add_argument('-f', type=str, help="File to parse")
+    parser.add_argument('-f', type=str, help="File Path of file to parse")
     parser.add_argument('-from', dest='start', type=int, default=0, help="starting position in the file (in bytes)")
     parser.add_argument('-len', type=int, default=500, help="number of bytes to read")
     parser.add_argument('-print_col_type', type=int, help='print the type of a column: BOOL, INT, FLOAT, STRING')
-    parser.add_argument('-print_col_idx', type=int, nargs = '*', help='the first argument is the column, the second is the offset')
-    parser.add_argument('-is_missing_idx', type=int, nargs = '*', help='is there a missing in the specified column offset')
+    parser.add_argument('-print_col_idx', type=int, nargs = 2, help='the first argument is the column, the second is the offset')
+    parser.add_argument('-is_missing_idx', type=int, nargs = 2, help='is there a missing in the specified column offset')
     return parser
 
 #File int int -> List of Strings
@@ -44,18 +44,18 @@ def format_all_rows(lo_file_text):
 
 
 def get_longest_row(lo_file_text):
-    return max(len(x) for x in lo_file_text)
+    return max(len(x) for x in lo_file_text) if lo_file_text else 0
 
 
 def string_to_type(raw_string):
     if re.search('[a-zA-Z]', raw_string):
-        return 'String'
+        return 'STRING'
     elif re.search('[+|-]?[0-9]*\.[0-9]*', raw_string):
-        return 'Float'
+        return 'FLOAT'
     elif re.search('[0|1]', raw_string):
-        return 'Bool'
+        return 'BOOL'
     elif re.search('[0-9]*', raw_string):
-        return 'Int'
+        return 'INT'
     else:
         return Missing.get_instance()
 
@@ -75,19 +75,33 @@ def determine_column_types(unparsed_list, size):
                 i += 1
             if not column_indx_remaining:
                 break
-    print(column_types)
     return column_types
+
+
+
+
+def build_valid_dataframe(column_types, unparsed_list):
+    sor_df = DataFrame()
+    sor_df.set_column_types(column_types)
+    for row in unparsed_list:
+        for x in range(len(row)):
+            if string_to_type(row[x]) != sor_df.column_types[x]:
+                row[x] = Missing.get_instance()
+        row.extend([Missing.get_instance()] * (len(column_types) - len(row)))
+        df_row = row
+        sor_df.add_row(row)
+
+    return sor_df
 
 
 if __name__ == "__main__":
     args = parse_arguments().parse_args()
     file_txt = read_file(file_path=args.f, bytes_to_read=args.len, start_byte=args.start)
     test = format_all_rows(file_txt)
-    sor_df = DataFrame()
-    for x in test:
-        sor_df.add_row(x)
-    print(sor_df.rows)
-    determine_column_types(sor_df.rows, get_longest_row(sor_df.rows))
+    column_types = determine_column_types(test, get_longest_row(test))
+    sor_df = build_valid_dataframe(column_types, test)
+    for x in sor_df.rows:
+        print(x, "\n")
     # print(get_longest_row(test))
     # for x in test:
     #     for y in x:
