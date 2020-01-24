@@ -1,15 +1,27 @@
-#include "node.h"
-
 class Map {
 public:
-  size_t size_;
+  size_t len_;
   Node** elems_;
 
-  Map(size_t size) {
-    size_ = size;
-    elems_ = (Node**) malloc(sizeof(node*)*size);
-     int i;
-     for(i=0;i<size;i++)
-        elem_[i] = NULL;
+  Map(){
+    elems_ = NULL;
+    len_ = 0;
+  }
+
+  void addElement(Node* elem) {
+    Node** nodeArr = new Node* [len_ +1];
+    if(elems_ == NULL) {
+      nodeArr[len_] = elem;
+    } else {
+      for(size_t i = 0; i < len_; i++) {
+        nodeArr[i] = elems_[i];
+      }
+      nodeArr[len_] = elem;
     }
+    len_++;
+    elems_ = nodeArr;
+  }
+
+  void removeElement(Object* key);
+  void getValue(Object* key);
 };
