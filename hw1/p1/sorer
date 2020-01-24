@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 import argparse
 import re
 from dfBuilder import DfBuilder
 from dfInterpreter import DfInterpreter
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="SoRer arg parser");

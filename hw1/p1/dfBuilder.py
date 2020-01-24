@@ -32,14 +32,27 @@ class DfBuilder:
     def string_to_type(raw_string):
         if re.search('[a-zA-Z]', raw_string):
             return 'STRING'
-        elif re.search('[+|-]?[0-9]*\.[0-9]*', raw_string):
+        elif re.search('[+|-]?[0-9]+\.[0-9]+', raw_string):
             return 'FLOAT'
         elif re.search('[0|1]', raw_string):
             return 'BOOL'
-        elif re.search('[0-9]*', raw_string):
-            return 'INT'
+        elif re.search('[+|-]?[0-9]+', raw_string):
+            return 'INTEGER'
         else:
             return Missing.get_instance()
+
+    @staticmethod
+    def does_value_equal_column_type(raw_cell_val, column_type):
+        if column_type == 'STRING':
+            return re.search('[a-zA-Z]', raw_cell_val)
+        elif column_type == 'FLOAT':
+            return re.search('[+|-]?[0-9]+\.[0-9]+', raw_cell_val)
+        elif column_type == 'BOOL':
+            return re.search('[0|1]', raw_cell_val)
+        elif column_type == 'INTEGER':
+            return re.search('[+|-]?[0-9]+', raw_cell_val)
+        else:
+            raise Exception('Column Type is invalid')
 
     def get_column_types(self):
         column_index_remaining = list(range(self.column_size))
@@ -61,7 +74,8 @@ class DfBuilder:
     def build_dataFrame_rows(self):
         for row in self.formatted_txt:
             for field in range(len(row)):
-                if self.string_to_type(row[field]) != self.result_dataFrame.column_types[field]:
+                if not self.does_value_equal_column_type(row[field], self.result_dataFrame.column_types[field]):
+                    # if self.string_to_type(row[field]) != self.result_dataFrame.column_types[field]:
                     row[field] = Missing.get_instance()
             row.extend([Missing.get_instance()] * (len(self.result_dataFrame.column_types) - len(row)))
             self.result_dataFrame.add_row(row)

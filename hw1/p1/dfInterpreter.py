@@ -17,13 +17,10 @@ class DfInterpreter:
 
     def interpret(self):
         if self.args.print_col_type is not None:
-            print('printing column type')
             self.print_col_type()
         elif self.args.print_col_idx:
-            print('printing column index')
             self.print_col_idx()
         elif self.args.is_missing_idx:
-            print('checking if index is missing')
             self.print_is_missing_idx()
         else:
             print('no interpreter args, nothing to see here')
