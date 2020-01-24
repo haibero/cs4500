@@ -26,7 +26,7 @@ def read_file(file_path, bytes_to_read, start_byte):
 
         # Drops the first row if it is incomplete
         if '\n' not in skipped_rows[-1] and start_byte != 0:
-            file_txt = file_txt[1:]
+            file_txt.pop(0)
 
         # Drops the last row if it is incomplete
         if file_txt[-1] != "" or not file_txt[-1]:
@@ -42,5 +42,3 @@ if __name__ == "__main__":
     df_builder.build()
     df_interpreter = DfInterpreter(df_builder.result_dataFrame, args)
     df_interpreter.interpret()
-
-
