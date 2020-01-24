@@ -3,7 +3,7 @@ from missing import Missing
 
 class DataFrame:
     def __init__(self):
-        self.column_types = []
+        self.column_types = {}
         self.rows = []
 
     def set_column_types(self, new_column_types):
@@ -26,4 +26,8 @@ class DataFrame:
             raise Exception("Can not get col_idx of Missing field")
         else:
             return self.get_cell(col_idx, offset)
+
+    def print_rows(self):
+        for row in self.rows:
+            print(row, "\n")
 
