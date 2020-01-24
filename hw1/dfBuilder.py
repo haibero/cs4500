@@ -71,5 +71,5 @@ class DfBuilder:
         self.set_column_size(self.get_longest_row_size())
         self.result_dataFrame.set_column_types(self.get_column_types())
         self.build_dataFrame_rows()
-        self.result_dataFrame.print_rows()
+        # self.result_dataFrame.print_rows()
 

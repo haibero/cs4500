@@ -1,7 +1,7 @@
-from dfBuilder import DfBuilder
 import argparse
 import re
-
+from dfBuilder import DfBuilder
+from dfInterpreter import DfInterpreter
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="SoRer arg parser");
@@ -19,7 +19,6 @@ def read_file(file_path, bytes_to_read, start_byte):
     with open(file_path, 'rb') as sor_file:
         skipped_rows = sor_file.read(start_byte).decode('utf-8')
         rad = sor_file.read(bytes_to_read)
-
         file_txt = rad.decode('utf-8').split('\n')
 
         # Keeps \n with the value after the split
@@ -38,8 +37,10 @@ def read_file(file_path, bytes_to_read, start_byte):
 
 if __name__ == "__main__":
     args = parse_arguments().parse_args()
-    file_txt = read_file(file_path=args.f, bytes_to_read=args.len, start_byte=args.start)
-    df_builder = DfBuilder(file_txt)
+    raw_sor_txt = read_file(file_path=args.f, bytes_to_read=args.len, start_byte=args.start)
+    df_builder = DfBuilder(raw_sor_txt)
     df_builder.build()
+    df_interpreter = DfInterpreter(df_builder.result_dataFrame, args)
+    df_interpreter.interpret()
 
 
