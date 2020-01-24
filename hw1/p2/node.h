@@ -1,26 +1,30 @@
-#include "object.h"
-
 class Node {
 public:
-  Object key_;
-  Object value_;
+  String* key_;
+  Object* value_;
   Node* next_;
 
   Node() {
-    key_ = new Object();
+    key_ = new String();
     value_ = new Object();
     next_ = NULL;
   }
 
-  Object getKey() {
+  Node(String* key, Object* value) {
+    key_ = key;
+    value_ = value;
+    next_ = NULL;
+  }
+
+  String* getKey() {
     return key_;
   }
 
-  Object getValue() {
+  Object* getValue() {
     return value_;
   }
 
-  void setValue(Object value) {
+  void setValue(Object* value) {
     value_ = value;
   }
 
