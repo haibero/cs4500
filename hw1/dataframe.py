@@ -27,3 +27,7 @@ class DataFrame:
         else:
             return self.get_cell(col_idx, offset)
 
+    def print_rows(self):
+        for row in self.rows:
+            print(row, "\n")
+
