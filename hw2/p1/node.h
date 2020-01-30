@@ -1,5 +1,5 @@
 //Node class to implement a map
-class Node {
+class Node : public Object {
 public:
   Object* key_;
   Object* value_;
@@ -9,18 +9,21 @@ public:
     key_ = new Object();
     value_ = new Object();
     next_ = NULL;
+    hash_ = hash();
   }
   //Node contructor
   Node(Object* key, Object* value) {
     key_ = key;
     value_ = value;
     next_ = NULL;
+    hash_ = hash();
   }
 
   Node(String* key, String* value) {
     key_ = key;
     value_ = value;
     next_ = NULL;
+    hash_ = hash();
   }
 
   //Gets the key of this node
@@ -50,4 +53,10 @@ public:
   void setNext(Node* next) {
     next_ = next;
   }
+
+  size_t hash() {
+    if (hash_ == 0) hash_ = key_ -> hash_me();
+    return hash_;
+  }
+
 };

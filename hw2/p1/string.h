@@ -1,51 +1,80 @@
-//lang::CwC
-//credit to: @chasebish
-//original repo url: https://github.com/chasebish/cwc_object_string
-#pragma once
-
-#include "object.h"
-#include <cstdlib>
-#include <cstring>
-#include <cstdio> 
+// lang :: CwC
 
 /**
- * An immutable String class representing a char*
- * author: chasebish */
-class String : public Object {
-public:
-  /** CONSTRUCTORS & DESTRUCTORS **/
+  * ClassName - purpose and interpretation
+  *
+  * @author Barry Yung <yung.b@northeastern.edu>
+  */
 
-  /* Creates a String copying s */
-  String(const char* s);
+class String: public Object {
+  public:
+    const char* val_; //Characters of the string
+    size_t len_; //Length of the string
 
-  /* Copies a String copying the value from s */
-  String(String* const s);
+    String(){
+      val_ = "";
+      len_ = 0;
+      hash_ = hash();
+    }
 
-  /* Clears String from memory */
-  ~String();
+    String(const char* val) {
+      val_ = val;
+      len_ = strlen(val);
+      hash_ = hash();
+    }
+
+    ~String() {
+      delete [] val_;
+     }
+
+     size_t hash() {
+       if (hash_ == 0) hash_ = hash_me();
+       return hash_;
+     }
+
+     size_t hash_me() {
+       size_t hashNum = 0;
+       for(size_t i = 0; i < len_; i++){
+         hashNum += size_t(val_[i]);
+       }
+       return hashNum;
+     }
 
 
-  /** INHERITED METHODS **/
+     bool equals(Object* o) {
+       if(o == nullptr) {
+         return false;
+       }
+       String* temp = dynamic_cast<String*> (o);
+       if(temp == nullptr) {
+         return false;
+       }
+       return strcmp(val_, temp -> val_) == 0;
+     }
 
-  /* Inherited from Object, generates a hash for a String */
-  size_t hash();
+     int cmp(String* const s) {
+       return strcmp(val_, s -> val_);
+     }
 
-  /* Inherited from Object, checks equality between an String and an Object */
-  bool equals(Object* const obj);
+    char get(size_t i) {
+      if(i < len_){
+      return val_[i];
+      }
+    }
 
+    String* concat(String* val) {
+      size_t newLen = len_ + val -> len_;
+      char* newString = new char[newLen];
+      for(size_t i = 0; i < len_; i++){
+        newString[i] = val_[i];
+      }
+      for(size_t j = 0; j < val->len_; j++) {
+        newString[j + len_] = val -> val_[j];
+      }
+      return new String(newString);
+    }
 
-  /** STRING METHODS **/
-  
-  /** Compares strings based on alphabetical order
-   * < 0 -> this String is less than String s
-   * = 0 -> this String is equal to String s
-   * > 0 -> this String is greater than String s
-   */
-  int cmp(String* const s);
-
-  /* Creates a new String by combining two existing Strings */
-  String* concat(String* const s);
-
-  /* Returns the current length of the String */
-  size_t size();
+    size_t size() {
+      return len_;
+    }
 };

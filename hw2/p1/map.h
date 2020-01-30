@@ -16,7 +16,20 @@ public:
      * Default constructor that constructs an empty Map with
      * the default initial capacity 16
     */
-    Map();
+
+    Node** elems_;
+    Object** keys_;
+    size_t capacity_;
+    size_t size_;
+
+    Map() {
+      for(int i = 0; i < capacity, i++){
+        elems_[i] == nullptr;
+      }
+      keys_ == nullptr;
+      capacity_ = 16;
+      size_ = 0;
+    }
 
     /**
      * Destructor that delete Map object
@@ -27,24 +40,43 @@ public:
     /**
      * Returns the number of key-value pairs in this map.
      */
-    int get_size();
+    int get_size(){
+      return size_; //ask them to return size_t!!!!!
+    }
 
     /**
      * Returns the capacity of the map.
      */
-    int get_capacity();
+    int get_capacity(){
+      return capacity_; //ask them to return size_t!!!!
+    }
 
     /**
      * increase or decrease the capacity of the map
      */
-    void resize();
+    void resize() {
+      //Double if at cap
+      //Halve if at
+    }
 
     /**
      * Put the given key value pair into the map
      * If the key is already associated with a value, the new value should overwrite the previous one
-     * @return  val
+     * @return  void
      */
-    Object* put(Object* key, Object* val);
+    void put(Object* key, Object* val){
+      size_t index = (key -> hash_) % capacity_;
+      if(contains_key(key)) {
+        remove(key);
+        size_--;
+      }
+      Node* n1 = new Node(key, val);
+      elems_-> insert(n1, index);
+      size_++;
+      if(get_size() >= get_capacity()) {
+        resize();
+      }
+    }
 
 
     /**
@@ -52,7 +84,11 @@ public:
      * @param key   the key whose associated value is to be returned
      * @return  the value mapped to the given key, or nullptr if the key is not found
      */
-    Object* get(Object* key);
+    Object* get(Object* key) {
+      size_t index = (key -> hash_) % capacity_;
+      Node* temp = elems_ -> get(index);
+      return temp -> val_;
+    }
 
 
     /**
@@ -60,7 +96,14 @@ public:
      * @param key   The key whose presence in this map is to be tested
      * @return  true if this map contains a mapping for the specified key, otherwise false
      */
-    bool contains_key(Object* key);
+    bool contains_key(Object* key) {
+      // if (get(key) == nullptr) {
+      //   return 0;
+      // } else {
+      //   return 1;
+      // }
+      return keys_ -> isIn(key);
+    }
 
 
     /**
@@ -68,13 +111,17 @@ public:
      * @param key
      * @return   value associated with the key, or nullptr if the key is not found
      */
-    Object* remove(Object* key);
+    Object* remove(Object* key) {
+      keys -> remove(key);
+    }
 
 
     /**
      * @return  a list of the keys contained in this map
      */
-    Object** key_set();
+    Object** key_set() {
+      for(size_t i = 0; i < l)
+    }
 
 
     /**
@@ -82,7 +129,9 @@ public:
      */
     Object** values();
 
-    size_t hash();
+    size_t hash() {
+
+    }
 
     bool equals(Object* object);
 };
