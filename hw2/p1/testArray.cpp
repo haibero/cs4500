@@ -1,6 +1,7 @@
 #include "helper.h"  // Your file, with any C++ code that you need
 #include "object.h"  // Your file with the CwC declaration of Object
 #include "string.h"  // Your file with the String class
+#include "node.h"
 #include <ctype.h>
 #include "array.h"
 

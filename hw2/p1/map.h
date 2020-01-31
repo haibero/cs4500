@@ -1,14 +1,13 @@
 //
 // Created by Jiawen Liu on 1/24/20.
 //
+//
+// #ifndef PART2_Map_H
+// #define PART2_Map_H
+//
+// #endif //PART2_Map_H
+//
 
-#ifndef PART2_Map_H
-#define PART2_Map_H
-
-#endif //PART2_Map_H
-
-#pragma once;
-#include "object.h"
 
 class Map : public Object {
 public:
@@ -17,46 +16,44 @@ public:
      * the default initial capacity 16
     */
 
-    Node** elems_;
-    Object** keys_;
-    size_t capacity_;
-    size_t size_;
+    NodeArray* elems_;
+    ObjArray* keys_;
+    float cap_thresh = .75;
 
     Map() {
-      for(int i = 0; i < capacity, i++){
-        elems_[i] == nullptr;
-      }
-      keys_ == nullptr;
-      capacity_ = 16;
-      size_ = 0;
+      elems_ = new NodeArray(16);
+      keys_ = new ObjArray(0);
     }
 
     /**
      * Destructor that delete Map object
      */
-    ~Map();
+    ~Map() {
+      delete elems_;
 
-public:
+    }
+
     /**
      * Returns the number of key-value pairs in this map.
      */
     int get_size(){
-      return size_; //ask them to return size_t!!!!!
+      return elems_ -> count(); //ask them to return size_t!!!!!
     }
 
     /**
      * Returns the capacity of the map.
      */
     int get_capacity(){
-      return capacity_; //ask them to return size_t!!!!
+      return elems_ -> length(); //ask them to return size_t!!!!
     }
 
     /**
      * increase or decrease the capacity of the map
      */
     void resize() {
-      //Double if at cap
-      //Halve if at
+      if(((float) elems_ -> count_ / (float) elems_ -> len_) > cap_thresh) {
+        elems_ -> grow();
+      }
     }
 
     /**
@@ -65,14 +62,12 @@ public:
      * @return  void
      */
     void put(Object* key, Object* val){
-      size_t index = (key -> hash_) % capacity_;
+      size_t index = (key -> hash_) % get_capacity();
       if(contains_key(key)) {
         remove(key);
-        size_--;
       }
       Node* n1 = new Node(key, val);
       elems_-> insert(n1, index);
-      size_++;
       if(get_size() >= get_capacity()) {
         resize();
       }
@@ -85,9 +80,9 @@ public:
      * @return  the value mapped to the given key, or nullptr if the key is not found
      */
     Object* get(Object* key) {
-      size_t index = (key -> hash_) % capacity_;
+      size_t index = (key -> hash_) % get_capacity();
       Node* temp = elems_ -> get(index);
-      return temp -> val_;
+      return temp -> value_;
     }
 
 
@@ -97,12 +92,16 @@ public:
      * @return  true if this map contains a mapping for the specified key, otherwise false
      */
     bool contains_key(Object* key) {
-      // if (get(key) == nullptr) {
-      //   return 0;
-      // } else {
-      //   return 1;
-      // }
-      return keys_ -> isIn(key);
+      size_t index = (key -> hash_) % get_capacity();
+      printf("Contains: %ld \n", key -> hash_);
+      printf("Contains index: %ld \n", index);
+      //printf("Get: %s", elems_ -> get(index) == nullptr);
+      if (elems_ -> get(index)) {// -> key_ == key) {
+        return 1;
+      } else {
+        printf("No key\n");
+        return 0;
+      }
     }
 
 
@@ -112,7 +111,11 @@ public:
      * @return   value associated with the key, or nullptr if the key is not found
      */
     Object* remove(Object* key) {
-      keys -> remove(key);
+      printf("Hash: %ld \n", key->hash_);
+      size_t index = (key -> hash_) % get_capacity();
+      printf("Index: %ld \n", index);
+      // printf("%s", elems_ -> get(index));// -> getValue());
+      // return elems_ -> remove(index);
     }
 
 
@@ -120,18 +123,22 @@ public:
      * @return  a list of the keys contained in this map
      */
     Object** key_set() {
-      for(size_t i = 0; i < l)
+      // for(size_t i = 0; i < l)
     }
 
 
     /**
      * @return  a list of values contained in this map
      */
-    Object** values();
+    Object** values() {
+
+    }
 
     size_t hash() {
 
     }
 
-    bool equals(Object* object);
+    bool equals(Object* object) {
+
+    }
 };

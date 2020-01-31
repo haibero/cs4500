@@ -1,4 +1,3 @@
-#pragma once
 #include <stdlib.h>
 
 class Array : public Object {
@@ -16,7 +15,8 @@ class Array : public Object {
   	}
 
   	// Destructor
-  	virtual ~Array() {}
+    ~Array() {
+    }
 
   	// inserts the given object into the array and returns the array
   	// virtual void insert(void* obj, size_t index) {}
@@ -41,13 +41,14 @@ class Array : public Object {
 
 
     //Increases the capacity of the array by double
-    virtual void grow(){
-
-    }
+    // virtual void grow(){
+    //
+    // }
 
     //Finds the index of the last element in the array
-    virtual size_t getLastIndex() {
-    }
+    // virtual size_t getLastIndex() {
+    //   return
+    // }
 };
 
 class ObjArray : public Array {
@@ -363,6 +364,78 @@ public:
   // append given object to the array if there is space
   // doubles the size of the array if an item occupies the length-1 index
   void append(String* to_add) {
+    if(count_ + 1 >= len_) {
+      grow();
+    }
+    array_[lastElemIndex_ + 1] = to_add;
+    lastElemIndex_++;
+    count_++;
+  }
+};
+
+class NodeArray : public Array {
+public:
+  Node** array_;
+
+  // Constructor
+  NodeArray(size_t len) : Array(len) {
+    array_ = new Node* [len];
+  }
+
+  ~NodeArray () {
+    delete [] array_;
+  }
+
+  void insert(Node* obj, size_t index) {
+      if(index > len_ - 1) {
+        exit(1);
+      }
+      array_[index]  = obj;
+      count_++;
+      if(index > lastElemIndex_) {
+        lastElemIndex_ = index;
+      }
+  }
+
+  Node* get(size_t index){
+    return array_[index];
+  }
+
+  // remove the item at the given index
+   Node* remove(size_t index) {
+    if(index > len_ -1) {
+      exit(1);
+    }
+    Node* removed = get(index);
+    array_[index] = nullptr;
+    count_--;
+
+    if(index == lastElemIndex_) {
+      lastElemIndex_= getLastIndex();
+    }
+    return removed;
+  }
+
+  void grow(){
+    Node** temp_data = new Node* [len_ * 2];
+    for(size_t i = 0; i < len_; i++) {
+      temp_data[i] = array_[i];
+    }
+    array_ = temp_data;
+    len_ *= 2;
+  }
+
+  size_t getLastIndex() {
+    for(int i = len_ - 1; i >= 0; i--) {
+      if(!array_[i]) {
+        return i;
+      }
+    }
+  }
+
+  // append given object to the array if there is space
+  // doubles the size of the array if an item occupies the length-1 index
+  void append(Node* to_add) {
     if(count_ + 1 >= len_) {
       grow();
     }
