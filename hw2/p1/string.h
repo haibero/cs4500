@@ -1,3 +1,6 @@
+#pragma once
+#include "object.h"
+
 // lang :: CwC
 
 /**
@@ -5,6 +8,7 @@
   *
   * @author Barry Yung <yung.b@northeastern.edu>
   */
+
 
 class String: public Object {
   public:
@@ -94,7 +98,7 @@ class String: public Object {
      * Removes leading and trailing spaces from this String
      */
     void trim() {
-      
+
     }
 
     /**

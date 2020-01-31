@@ -1,3 +1,5 @@
+#pragma once
+#include "object.h"
 //Node class to implement a map
 class Node : public Object {
 public:

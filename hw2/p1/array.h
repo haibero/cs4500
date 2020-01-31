@@ -14,7 +14,13 @@ class Array : public Object {
 
     // Constructor
   	Array(size_t len) {
-  		len_ = len;
+      // No size 0 arrays
+      // if(len <= 0) {
+      //   len_ = 1;
+      // } else {
+      //   len_ = len;
+      // }
+      len_ = len;
   		count_ = 0;
       lastElemIndex_ = -1;
   	}
@@ -95,6 +101,15 @@ public:
     return removed;
   }
 
+  size_t index_of(Object* obj) { // Returns the index of the first occurrence of o, or >size() if not there
+    for(int i = 0; i < len_; i++) {
+      if(obj -> equals(array_[i])){
+        return i;
+      }
+    }
+    return length() + 1;
+  }
+
   void grow(){
     Object** temp_data = new Object* [len_ * 2];
     for(size_t i = 0; i < len_; i++) {
@@ -110,6 +125,7 @@ public:
         return i;
       }
     }
+    return 0;
   }
 
   // append given object to the array if there is space
@@ -427,6 +443,7 @@ public:
       temp_data[i] = array_[i];
     }
     array_ = temp_data;
+    delete (temp_data);
     len_ *= 2;
   }
 

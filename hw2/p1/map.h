@@ -21,8 +21,8 @@ public:
     float cap_thresh = .75;
 
     Map() {
-      elems_ = new NodeArray(16);
-      keys_ = new ObjArray(0);
+      elems_ = new NodeArray(32);
+      keys_ = new ObjArray(5);
     }
 
     /**
@@ -63,12 +63,12 @@ public:
      */
     void put(Object* key, Object* val){
       size_t index = (key -> hash_) % get_capacity();
-      printf("In put, key hash: %ld\n", key -> hash_);
       if(contains_key(key)) {
         remove(key);
       }
       Node* n1 = new Node(key, val);
       elems_-> insert(n1, index);
+      keys_-> append(key);
       resize();
     }
 
@@ -92,13 +92,13 @@ public:
      */
     bool contains_key(Object* key) {
       size_t index = (key -> hash_) % get_capacity();
-      printf("Contains: %ld \n", key -> hash_);
-      printf("Contains index: %ld \n", index);
-      //printf("Get: %s", elems_ -> get(index) == nullptr);
-      if (elems_ -> get(index)) {// -> key_ == key) {
-        return 1;
+      if (elems_ -> get(index)) {
+        if(elems_ -> get(index) -> key_== key){
+          return 1;
+        } else {
+          return 0;
+        }
       } else {
-        printf("No key\n");
         return 0;
       }
     }
@@ -110,11 +110,9 @@ public:
      * @return   value associated with the key, or nullptr if the key is not found
      */
     Object* remove(Object* key) {
-      printf("Hash: %ld \n", key->hash_);
       size_t index = (key -> hash_) % get_capacity();
-      printf("Index: %ld \n", index);
-      // printf("%s", elems_ -> get(index));// -> getValue());
-      // return elems_ -> remove(index);
+      keys_ -> remove(keys_ -> index_of(key));
+      return elems_ -> remove(index);
     }
 
 
@@ -122,7 +120,11 @@ public:
      * @return  a list of the keys contained in this map
      */
     Object** key_set() {
-      // for(size_t i = 0; i < l)
+      Object** keys;
+      for(size_t i = 0; i < keys_ -> len_; i++ ){
+        keys[i] = keys_->get(i);
+      }
+      return keys;
     }
 
 
@@ -130,7 +132,11 @@ public:
      * @return  a list of values contained in this map
      */
     Object** values() {
-
+      Object** value_list = new Object * [keys_->count_];
+      for(size_t i = 0; i < keys_ -> count_; i++ ) {
+        value_list[i] = get(keys_->get(i));
+      }
+      return value_list;
     }
 
     size_t hash() {
