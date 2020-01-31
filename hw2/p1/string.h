@@ -29,7 +29,6 @@ class String: public Object {
 
      size_t hash() {
        if (hash_ == 0) hash_ = hash_me();
-       printf("hash set in string hash %ld\n", hash_);
        return hash_;
      }
 
@@ -38,7 +37,7 @@ class String: public Object {
        for(size_t i = 0; i < len_; i++){
          hashNum += size_t(val_[i]);
        }
-       printf("created hash: %ld, str: %s\n", hashNum, val_);
+
        return hashNum;
      }
 
@@ -79,4 +78,32 @@ class String: public Object {
     size_t size() {
       return len_;
     }
+
+    /**
+     * Checks if this String contains the given String.
+     */
+    bool contains(String* sub) {
+      const char* result = strstr(val_, sub->val_);
+      if (result){
+        return true;
+      }
+      return false;
+    }
+
+     /**
+     * Removes leading and trailing spaces from this String
+     */
+    void trim() {
+      
+    }
+
+    /**
+     * Alphanumerically ompares the given String to this String
+     * Returns 0 if equal, 1 if if the given String is alphumerically higher,
+     * or -1 if the given String is alphanumerically lower.
+    */
+    int compare(String* s) {
+      return cmp(s);
+    }
+
 };

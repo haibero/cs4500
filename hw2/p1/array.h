@@ -1,4 +1,9 @@
+#pragma once
 #include <stdlib.h>
+#include "object.h"
+#include "string.h"
+#include "node.h"
+
 
 class Array : public Object {
   public:
@@ -11,7 +16,7 @@ class Array : public Object {
   	Array(size_t len) {
   		len_ = len;
   		count_ = 0;
-      lastElemIndex_ = 0;
+      lastElemIndex_ = -1;
   	}
 
   	// Destructor
@@ -113,7 +118,7 @@ public:
     if(count_ + 1 >= len_) {
       grow();
     }
-    array_[lastElemIndex_ + 1] = to_add;
+    array_[lastElemIndex_+1] = to_add;
     lastElemIndex_++;
     count_++;
   }

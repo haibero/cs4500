@@ -1,6 +1,5 @@
 #pragma once
 #include "object.h"
-#include "string.h"
 #include "array.h"
 
 class Queue : public Object {
@@ -44,7 +43,7 @@ public:
     if (size() < 1){
       exit(1);
     }
-
+    
     return q->get(FIRST);
   }
   
@@ -56,11 +55,29 @@ public:
   }
   
   size_t hash() {
-    return 0;
+    size_t hashNum = 0;
+    for (size_t i = 0; i < size(); i++){
+      hashNum += q->get(i)->hash();
+    }
+    return hashNum;
   }
   
   bool equals(Object* other) {
-    return false;
+    Queue* otherTemp = dynamic_cast<Queue*>(other);
+    if (otherTemp == NULL){
+      return false;
+    }
+    if (size() == otherTemp->size()){
+      for (int i = 0; i < size(); i++){
+        if (!q->get(i)->equals(otherTemp->q->get(i))){
+          return false;
+        }
+      }
+    }else{
+      return false;
+    }
+    
+    return true;
   }
   
 
