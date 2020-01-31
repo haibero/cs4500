@@ -36,14 +36,14 @@ public:
     /**
      * Returns the number of key-value pairs in this map.
      */
-    int get_size(){
+    size_t get_size(){
       return elems_ -> count(); //ask them to return size_t!!!!!
     }
 
     /**
      * Returns the capacity of the map.
      */
-    int get_capacity(){
+    size_t get_capacity(){
       return elems_ -> length(); //ask them to return size_t!!!!
     }
 
@@ -63,14 +63,13 @@ public:
      */
     void put(Object* key, Object* val){
       size_t index = (key -> hash_) % get_capacity();
+      printf("In put, key hash: %ld\n", key -> hash_);
       if(contains_key(key)) {
         remove(key);
       }
       Node* n1 = new Node(key, val);
       elems_-> insert(n1, index);
-      if(get_size() >= get_capacity()) {
-        resize();
-      }
+      resize();
     }
 
 

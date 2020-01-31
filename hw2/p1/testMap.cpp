@@ -86,7 +86,8 @@ void test5() {
     String * key_2 = new String("c");
     String * val_2 = new String("4");
     String * key_3 = new String("c");
-    //h1->put(key_4, val_1);
+    printf("is test5 hash %ld\n", key_4->hash_);
+    h1->put(key_4, val_1);
     h1->put(key_2, val_2);
     h1->put(key_3, val_2);
     delete h1;

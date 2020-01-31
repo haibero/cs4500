@@ -29,6 +29,7 @@ class String: public Object {
 
      size_t hash() {
        if (hash_ == 0) hash_ = hash_me();
+       printf("hash set in string hash %ld\n", hash_);
        return hash_;
      }
 
@@ -37,6 +38,7 @@ class String: public Object {
        for(size_t i = 0; i < len_; i++){
          hashNum += size_t(val_[i]);
        }
+       printf("created hash: %ld, str: %s\n", hashNum, val_);
        return hashNum;
      }
 

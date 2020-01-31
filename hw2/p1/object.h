@@ -8,6 +8,7 @@ class Object {
     size_t hash_;
 
     Object() {
+      hash_ = 0;
     }
 
     virtual bool equals(Object *other) {
