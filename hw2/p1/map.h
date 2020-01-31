@@ -58,8 +58,8 @@ public:
     }
 
     void reallocate() {
-      NodeArray* tempArray = new NodeArray(elems -> len_);
-      for(int i = 0; i < keys -> count_; i++) {
+      NodeArray* tempArray = new NodeArray(elems_ -> len_);
+      for(int i = 0; i < keys_ -> count_; i++) {
         size_t oriIndex = (keys_ -> get(i) -> hash_) % (get_capacity() / 2);
         size_t newIndex = (keys_ -> get(i) -> hash_) % get_capacity();
         tempArray -> insert(elems_ -> get(oriIndex), newIndex);
