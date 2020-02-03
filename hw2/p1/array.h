@@ -83,17 +83,22 @@ public:
   }
 
   Object* get(size_t index){
+    if(index > len_ -1) {
+      return nullptr;
+    }
     return array_[index];
   }
 
   // remove the item at the given index
   Object* remove(size_t index) {
     if(index > len_ -1) {
-      exit(1);
+      return nullptr;
     }
     Object* removed = get(index);
     array_[index] = nullptr;
-    count_--;
+    if (removed){
+      count_--;
+    }
 
     if(index == lastElemIndex_) {
       lastElemIndex_= getLastIndex();
@@ -103,8 +108,10 @@ public:
 
   size_t index_of(Object* obj) { // Returns the index of the first occurrence of o, or >size() if not there
     for(int i = 0; i < len_; i++) {
-      if(obj -> equals(array_[i])){
-        return i;
+      if (get(i)){
+        if(obj -> equals(get(i))){
+          return i;
+        }
       }
     }
     return length() + 1;
@@ -119,15 +126,6 @@ public:
     len_ *= 2;
   }
 
-  size_t getLastIndex() {
-    for(int i = len_ - 1; i >= 0; i--) {
-      if(!array_[i]) {
-        return i;
-      }
-    }
-    return 0;
-  }
-
   // append given object to the array if there is space
   // doubles the size of the array if an item occupies the length-1 index
   void append(Object* to_add) {
@@ -138,6 +136,15 @@ public:
     lastElemIndex_++;
     count_++;
   }
+
+  size_t getLastIndex() {
+      for(int i = len_ - 1; i >= 0; i--) {
+        if(!array_[i]) {
+          return i;
+        }
+      }
+      return -1;
+    }
 };
 
 
@@ -162,24 +169,25 @@ public:
   	}
 
   	// remove the item at the given index
-  	int remove(size_t index) {
+  	int* remove(size_t index) {
   		if (index > (len_ - 1)){
-  			exit(1);
+  			return nullptr;
   		}
-  		int removed = get(index);
+  		int* removed = get(index);
   		array_[index] = nullptr;
-  		count_ -= 1;
+      if (removed){
+        count_--;
+      }
+  		
   		return removed;
   	}
 
   	// gets the object from data stored at index
-  	int get(size_t index){
-      int* elem = array_[index];
-      if(elem) {
-  		    return *array_[index];
-      } else {
-        exit(1);
+  	int* get(size_t index){
+      if(index > len_ -1) {
+        return nullptr;
       }
+      return array_[index];
   	}
 
     void push_back(int* obj){
@@ -209,6 +217,15 @@ public:
       lastElemIndex_++;
       count_++;
     }
+
+    size_t getLastIndex() {
+      for(int i = len_ - 1; i >= 0; i--) {
+        if(!array_[i]) {
+          return i;
+        }
+      }
+      return -1;
+    }
 };
 
 class BoolArray : public Array {
@@ -232,19 +249,25 @@ public:
   	}
 
   	// remove the item at the given index
-  	bool remove(size_t index) {
-  		if (index > (len_ - 1)){
-  			exit(1);
-  		}
-  		bool removed = get(index);
-  		array_[index] = NULL;
-  		count_ = count_ - 1;
-  		return removed;
+  	bool* remove(size_t index) {
+      if (index > (len_ - 1)){
+        return nullptr;
+      }
+      bool* removed = get(index);
+      array_[index] = nullptr;
+      if (removed){
+        count_--;
+      }
+      
+      return removed;
   	}
 
   	// gets the object from data stored at index
-  	bool get(size_t index){
-  		return *array_[index];
+  	bool* get(size_t index){
+      if(index > len_ -1) {
+        return nullptr;
+      }
+  		return array_[index];
   	}
 
     void grow(){
@@ -265,6 +288,15 @@ public:
       array_[lastElemIndex_ + 1] = to_add;
       lastElemIndex_++;
       count_++;
+    }
+
+    size_t getLastIndex() {
+      for(int i = len_ - 1; i >= 0; i--) {
+        if(!array_[i]) {
+          return i;
+        }
+      }
+      return -1;
     }
 };
 
@@ -289,19 +321,25 @@ public:
   	}
 
   	// remove the item at the given index
-  	float remove(size_t index) {
+  	float* remove(size_t index) {
   		if (index > (len_ - 1)){
-  			exit(1);
+  			return nullptr;
   		}
-  		float removed = get(index);
+  		float* removed = get(index);
   		array_[index] = nullptr;
-  		count_ = count_ - 1;
+      if (removed){
+        count_--;
+      }
+  		
   		return removed;
   	}
 
   	// gets the object from data stored at index
-  	float get(size_t index){
-  		return *array_[index];
+  	float* get(size_t index){
+  	  if(index > len_ -1) {
+        return nullptr;
+      }
+      return array_[index];
   	}
 
     void grow(){
@@ -322,6 +360,15 @@ public:
       array_[lastElemIndex_ + 1] = to_add;
       lastElemIndex_++;
       count_++;
+    }
+
+    size_t getLastIndex() {
+      for(int i = len_ - 1; i >= 0; i--) {
+        if(!array_[i]) {
+          return i;
+        }
+      }
+      return -1;
     }
 };
 
@@ -347,17 +394,22 @@ public:
   }
 
   String* get(size_t index){
+    if(index > len_ -1) {
+      return nullptr;
+    }
     return array_[index];
   }
 
   // remove the item at the given index
   String* remove(size_t index) {
     if(index > len_ -1) {
-      exit(1);
+      return nullptr;
     }
     String* removed = get(index);
     array_[index] = nullptr;
-    count_--;
+    if (removed){
+      count_--;
+    }
 
     if(index == lastElemIndex_) {
       lastElemIndex_= getLastIndex();
@@ -374,14 +426,6 @@ public:
     len_ *= 2;
   }
 
-  size_t getLastIndex() {
-    for(int i = len_ - 1; i >= 0; i--) {
-      if(!array_[i]) {
-        return i;
-      }
-    }
-  }
-
   // append given object to the array if there is space
   // doubles the size of the array if an item occupies the length-1 index
   void append(String* to_add) {
@@ -392,6 +436,15 @@ public:
     lastElemIndex_++;
     count_++;
   }
+
+  size_t getLastIndex() {
+      for(int i = len_ - 1; i >= 0; i--) {
+        if(!array_[i]) {
+          return i;
+        }
+      }
+      return -1;
+    }
 };
 
 class NodeArray : public Array {
@@ -401,6 +454,10 @@ public:
   // Constructor
   NodeArray(size_t len) : Array(len) {
     array_ = new Node* [len];
+    for (int i = 0; i < len; i++)
+    {
+      array_[i] = nullptr;
+    }
   }
 
   ~NodeArray () {
@@ -419,17 +476,23 @@ public:
   }
 
   Node* get(size_t index){
+    if(index > len_ -1) {
+      return nullptr;
+    }
+
     return array_[index];
   }
 
   // remove the item at the given index
    Node* remove(size_t index) {
     if(index > len_ -1) {
-      exit(1);
+      return nullptr;
     }
     Node* removed = get(index);
     array_[index] = nullptr;
-    count_--;
+    if (removed){
+      count_--;
+    }
 
     if(index == lastElemIndex_) {
       lastElemIndex_= getLastIndex();
@@ -443,16 +506,8 @@ public:
       temp_data[i] = array_[i];
     }
     array_ = temp_data;
-    delete (temp_data);
+    delete(temp_data);
     len_ *= 2;
-  }
-
-  size_t getLastIndex() {
-    for(int i = len_ - 1; i >= 0; i--) {
-      if(!array_[i]) {
-        return i;
-      }
-    }
   }
 
   // append given object to the array if there is space
@@ -465,4 +520,13 @@ public:
     lastElemIndex_++;
     count_++;
   }
+
+  size_t getLastIndex() {
+      for(int i = len_ - 1; i >= 0; i--) {
+        if(!array_[i]) {
+          return i;
+        }
+      }
+      return -1;
+    }
 };

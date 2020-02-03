@@ -22,7 +22,7 @@ public:
 
     Map() {
       elems_ = new NodeArray(32);
-      keys_ = new ObjArray(5);
+      keys_ = new ObjArray(8);
     }
 
     /**
@@ -30,7 +30,7 @@ public:
      */
     ~Map() {
       delete elems_;
-
+      delete keys_;
     }
 
     /**
@@ -92,7 +92,11 @@ public:
     Object* get(Object* key) {
       size_t index = (key -> hash_) % get_capacity();
       Node* temp = elems_ -> get(index);
-      return temp -> value_;
+      if (temp){
+        return temp -> value_;
+      }
+      
+      return nullptr;
     }
 
 
@@ -104,14 +108,11 @@ public:
     bool contains_key(Object* key) {
       size_t index = (key -> hash_) % get_capacity();
       if (elems_ -> get(index)) {
-        if(elems_ -> get(index) -> key_== key){
+        if(elems_ -> get(index) -> key_->equals(key)){
           return 1;
-        } else {
-          return 0;
-        }
-      } else {
-        return 0;
+        } 
       }
+      return 0;
     }
 
 

@@ -46,20 +46,23 @@ class String: public Object {
      }
 
 
-     bool equals(Object* o) {
+    bool equals(Object* o) {
        if(o == nullptr) {
          return false;
        }
-       String* temp = dynamic_cast<String*> (o);
+       String* temp = dynamic_cast<String*>(o);
        if(temp == nullptr) {
          return false;
        }
-       return strcmp(val_, temp -> val_) == 0;
+
+       return cmp(temp) == 0;
      }
+
 
      int cmp(String* const s) {
        return strcmp(val_, s -> val_);
      }
+
 
     char get(size_t i) {
       if(i < len_){

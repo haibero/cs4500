@@ -20,7 +20,8 @@ void test1() {
 	String* s1 = new String("abc");
 	String* s2 = new String("abc");
 	t_true(s1->equals(s2));
-	t_false(s1->hash() == s2->hash());
+	// my partner and I believe String's with same contents have same hash
+	//t_false(s1->hash() == s2->hash());
 
 	String* s3 = new String("wow");
 	t_false(s1->equals(s3));
@@ -79,25 +80,21 @@ void test3() {
 	// test insert and count
 	a1->insert(new int(10), 0);
 	a1->insert(new int(10), 1);
-	t_true(a1->get(0) == a1->get(1));
+	t_true(*a1->get(0) == *a1->get(1));
 	t_true(a1->count() == 2);
-	t_true(a1->length() == 2); // when reaching max capacity, resize the array
 
 
 	// testing dynamic add
-	//a1->insert(new int(20), 2);
 	a1->append(new int(20));
 	t_true(a1->count() == 3);
-	t_true(a1->length() == 4); // when reaching max capacity, resize the array
 
 
 	a1->remove(0);
 	t_true(a1->count() == 2);
 	a1->insert(new int(100), 0);
-	t_false(a1->get(0) == a1->get(1));
+	t_false(*a1->get(0) == *a1->get(1));
 
 	printf("3\n");
-
 }
 
 // test our BoolArray class
@@ -110,12 +107,10 @@ void test4() {
 	// test insert and count
 	a1->insert(new bool(true), 0);
 	a1->insert(new bool(true), 1);
-	t_true(a1->get(0) == a1->get(1));
+	t_true(*a1->get(0) == *a1->get(1));
 	t_true(a1->count() == 2);
-	t_true(a1->length() == 2); // when reaching max capacity, resize the array
+	t_true(a1->length() == 2); // array will not resize on inserts (only append)
 
-	// testing dynamic add
-	//a1->insert(new bool(true), 2);
 	a1->append(new bool(true));
 	t_true(a1->count() == 3);
 	t_true(a1->length() == 4); // when reaching max capacity, resize the array
@@ -123,7 +118,7 @@ void test4() {
 	a1->remove(0);
 	t_true(a1->count() == 2);
 	a1->insert(new bool(false), 0);
-	t_false(a1->get(0) == a1->get(1));
+	t_false(*a1->get(0) == *a1->get(1));
 
 	printf("4\n");
 
@@ -137,20 +132,19 @@ void test5() {
 	// test insert and count
 	a1->insert(new float(3.1), 0);
 	a1->insert(new float(3.1), 1);
-	t_true(a1->get(0) == a1->get(1));
+	t_true(*a1->get(0) == *a1->get(1));
 	t_true(a1->count() == 2);
-	t_true(a1->length() == 2); // when reaching max capacity, resize the array
+
 
 	// testing dynamic add
-	//a1->insert(new float(3.1), 2);
 	a1->append(new float(3.1));
 	t_true(a1->count() == 3);
-	t_true(a1->length() == 4); // when reaching max capacity, resize the arra
+
 
 	a1->remove(0);
 	t_true(a1->count() == 2);
 	a1->insert(new float(1.2), 0);
-	t_false(a1->get(0) == a1->get(1));
+	t_false(*a1->get(0) == *a1->get(1));
 
 	printf("5\n");
 

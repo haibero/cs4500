@@ -11,6 +11,7 @@ class Object {
     }
 
     virtual bool equals(Object *other) {
+      printf("checking equals in Object\n");
       return this == other;
     }
 

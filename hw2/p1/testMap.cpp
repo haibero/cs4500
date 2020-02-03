@@ -66,11 +66,11 @@ void test3() {
 /**
  * get() returns nullptr if there's no mapping for the given key in the map
  */
-// void test4() {
-//     Map* h1 = new Map();
-//     t_true(h1 -> get(new String("1")) == nullptr);
-//     OK("3");
-// }
+void test4() {
+    Map* h1 = new Map();
+    t_true(h1 -> get(new String("1")) == nullptr);
+    OK("4");
+}
 
 
 /**
@@ -85,12 +85,14 @@ void test5() {
     String * val_1 = new String("2");
     String * key_2 = new String("World");
     String * val_2 = new String("4");
+    String * val_3 = new String("4");
     h1->put(key_1, val_2);
     h1->put(key_2, val_2);
     h1->put(key_2, val_2);
     h1->remove(key_1);//->equals(val_1));
     t_false(h1->remove(key_2)->equals(val_1));
-    //t_true(h1->remove(key_1) == nullptr);
+    t_true(h1->remove(key_1) == nullptr);
+
     OK("5");
 }
 
@@ -147,8 +149,8 @@ int main() {
     test1();
     test2();
     test3();
-    //test4();
-    //gtest5();
+    test4();
+    //test5();
     test6();
     test7();
     return 0;
