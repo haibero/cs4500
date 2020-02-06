@@ -61,6 +61,10 @@ public:
 	// * possible indices: 0 -> (rcol() - 1)
 	Column** getRowByNum(int rowIndx);
 
+	// determines if an input object is equal to this dataframe
+	bool equal(Object* other);
+
+	
 };
 
 

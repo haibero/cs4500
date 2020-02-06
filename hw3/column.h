@@ -40,6 +40,12 @@ public:
 
 	// determines if an input object is equal to this StringColumn
 	bool equal(Object* other);
+
+	// apply a function to this StringColumn
+	// * method mutates this StringColumn object
+	// * therefore the return type of the input function must be 'String*'
+	void applyToColumn(String* (func*)(String*));
+
 };
 
 class BoolColumn : public Column
@@ -60,6 +66,11 @@ public:
 
 	// determines if an input object is equal to this BoolColumn
 	bool equal(Object* other);
+
+	// apply a function to this BoolColumn
+	// * method mutates this BoolColumn object
+	// * therefore the return type of the input function must be 'bool'
+	void applyToColumn(bool (func*)(bool));
 };
 
 
@@ -81,6 +92,11 @@ public:
 
 	// determines if an input object is equal to this IntColumn
 	bool equal(Object* other);
+
+	// apply a function to this IntColumn
+	// * method mutates this IntColumn object
+	// * therefore the return type of the input function must be 'int'
+	void applyToColumn(int (func*)(int));
 };
 
 class FloatColumn : public Column
@@ -101,6 +117,11 @@ public:
 
 	// determines if an input object is equal to this FloatColumn
 	bool equal(Object* other);
+
+	// apply a function to this FloatColumn
+	// * method mutates this FloatColumn object
+	// * therefore the return type of the input function must be 'float'
+	void applyToColumn(float (func*)(float));
 };
 
 
