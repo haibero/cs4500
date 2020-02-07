@@ -29,7 +29,7 @@ public:
 	~StringColumn();
 
 	// gets String* cell value at row number in column
-	String* get(int row);
+	String* get(size_t row);
 
 	// prints this column of Strings (default will not print name)
 	// header will be included if 'true' is passed as arguement
@@ -55,7 +55,7 @@ public:
 	~BoolColumn();
 
 	// gets bool cell value at row number in column
-	bool get(int row);
+	bool get(size_t row);
 
 	// prints this column of bools (default will not print name)
 	// header will be included if 'true' is passed as arguement
@@ -81,7 +81,7 @@ public:
 	~IntColumn();
 
 	// gets int cell value at row number in column
-	int get(int row);
+	int get(size_t row);
 
 	// prints this column of ints (default will not print name)
 	// header will be included if 'true' is passed as arguement
@@ -102,11 +102,11 @@ public:
 class FloatColumn : public Column
 {
 public:
-	FloatColumn(int cell, ...);
+	FloatColumn(float cell, ...);
 	~FloatColumn();
 
 	// gets float cell value at row number in column
-	float get(int row);
+	float get(size_t row);
 
 	// prints this column of floats (default will not print name)
 	// header will be included if 'true' is passed as arguement 
