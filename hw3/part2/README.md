@@ -39,6 +39,8 @@ DataFrame* d1 = new DataFrame(c1, c2, c3, c4);
 
 DataFrame* d2 = new DataFrame(c3, c4);
 
+----------------------------------------------------------------------
+
 
 //Allows the user to get a value at a given index
 
@@ -48,6 +50,9 @@ d1.indxGet(0,0);
 
 1
 
+----------------------------------------------------------------------
+
+
 //Allows the user to get the names of all the columns
 
 
@@ -55,6 +60,8 @@ d1.getColumnNames();
 
 
 "c1, c2, c3, c4"
+
+----------------------------------------------------------------------
 
 //Allows the user to check the number of rows
 
@@ -64,6 +71,8 @@ d1.nrows();
 
 4
 
+----------------------------------------------------------------------
+
 //Allows the user to check all the columns have names
 
 
@@ -71,6 +80,9 @@ columnNamesExist();
 
 
 true
+
+----------------------------------------------------------------------
+
 
 //Allows the user to merge dataframes row wise
 
@@ -95,6 +107,8 @@ c3    "a"   "b"   "c"   "d"
 
 c4    "1.2" "2.3" "3.4" "4.5"
 
+----------------------------------------------------------------------
+
 
 //Allows the user to modify a dataframe with a function such as addOne
 
@@ -118,3 +132,5 @@ c3    "a"   "b"   "c"   "d"
 
 
 c4    "1.2" "2.3" "3.4" "4.5"
+
+----------------------------------------------------------------------
