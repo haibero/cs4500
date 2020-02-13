@@ -49,7 +49,6 @@ class Schema : public Object {
     }
 
     width_ = strlen(types);
-    printf("width_: %zu\n", width());
   }
 
   /** Add a column of the given type and name (can be nullptr), name

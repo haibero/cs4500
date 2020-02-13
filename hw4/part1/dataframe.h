@@ -45,14 +45,11 @@ class DataFrame : public Object {
     * is external, and appears as the last column of the dataframe, the
     * name is optional and external. A nullptr colum is undefined. */
   void add_column(Column* col, String* name){
-    printf("width_: %zu\n", schema_-> width());
     size_t indexColPointer = floor((schema_ -> width_) / 100);
     size_t indexCol = (schema_ -> width_) % 100;
     if(schema_->width_ != 0 && indexCol == 0){
       dataframe_[indexColPointer] = new Column* [100];
     }
-    printf("%zu\n", indexColPointer);
-    printf("%zu\n", indexCol);
     dataframe_[indexColPointer][indexCol] = col;
     schema_->add_column(col->get_type(), name);
   }
