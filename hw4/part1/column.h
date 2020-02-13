@@ -43,7 +43,35 @@ class IntColumn : public Column {
   size_t size()
 };
 
-// Other primitive column classes similar...
+/*************************************************************************
+ * BoolColumn::
+ * Holds bool values.
+ */
+class BoolColumn : public Column {
+ public:
+  BoolColumn()
+  BoolColumn(bool n, ...)
+  int get(size_t idx)
+  BoolColumn* as_bool()
+  /** Set value at idx. An out of bound idx is undefined.  */
+  void set(size_t idx, bool val)
+  size_t size()
+};
+
+/*************************************************************************
+ * FloatColumn::
+ * Holds float values.
+ */
+class FloatColumn : public Column {
+ public:
+  FloatColumn()
+  FloatColumn(float n, ...)
+  int get(size_t idx)
+  FloatColumn* as_float()
+  /** Set value at idx. An out of bound idx is undefined.  */
+  void set(size_t idx, float val)
+  size_t size()
+};
 
 /*************************************************************************
  * StringColumn::
