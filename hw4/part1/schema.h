@@ -20,8 +20,11 @@ class Schema : public Object {
   Schema(Schema& from) {
     columnTypes_ = from.columnTypes_;
     columnNames_ = from.columnNames_;
-    rowNames_ = from.rowNames_;
     width_ = from.width_;
+  }
+
+  Schema(Schema& from, bool add_row_info): Schema(from) {
+    rowNames_ = from.rowNames_;
     length_ = from.length_;
   }
 
