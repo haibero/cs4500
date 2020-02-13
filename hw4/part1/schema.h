@@ -21,6 +21,8 @@ class Schema : public Object {
     columnTypes_ = from.columnTypes_;
     columnNames_ = from.columnNames_;
     width_ = from.width_;
+    printf("Wdith schema: %s\n", from.columnTypes_);
+    printf("Wdith schema: %s\n", columnTypes_);
   }
 
   Schema(Schema& from, bool add_row_info): Schema(from) {
@@ -45,7 +47,9 @@ class Schema : public Object {
     for(size_t i = 0; i < strlen(types); i++) {
       columnTypes_[i] = types[i];
     }
+
     width_ = strlen(types);
+    printf("width_: %zu\n", width());
   }
 
   /** Add a column of the given type and name (can be nullptr), name
@@ -84,7 +88,10 @@ class Schema : public Object {
   /** Given a column name return its index, or -1. */
   int col_idx(const char* name) {
     for(size_t i = 0; i < width_; i++) {
-      if(strcmp(columnNames_[i] -> cstr_, name) == 0) {
+      if(columnNames_[i] == nullptr){
+        continue;
+      }
+      if(strcmp(columnNames_[i] -> c_str(), name) == 0) {
         return i;
       }
     }
@@ -94,7 +101,10 @@ class Schema : public Object {
   /** Given a row name return its index, or -1. */
   int row_idx(const char* name) {
     for(size_t i = 0; i < length_; i++) {
-      if(strcmp(rowNames_[i] -> cstr_, name) == 0) {
+      if(rowNames_[i] == nullptr){
+        continue;
+      }
+      if(strcmp(rowNames_[i] -> c_str(), name) == 0) {
         return i;
       }
     }
