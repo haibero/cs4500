@@ -12,9 +12,16 @@
  * This abstract class defines methods overriden in subclasses. There is
  * one subclass per element type. Columns are mutable, equality is pointer
  * equality. */
+class IntColumn;
+class BoolColumn;
+class FloatColumn;
+class StringColumn;
+
+
 class Column : public Object {
  public:
   size_t size_;
+  char* type_;
 
   Column(size_t size) {
     size_ = size;
@@ -25,17 +32,25 @@ class Column : public Object {
   }
   /** Type converters: Return same column under its actual type, or
    *  nullptr if of the wrong type.  */
-  // virtual IntColumn* as_int();
-  // virtual BoolColumn*  as_bool();
-  // virtual FloatColumn* as_float();
-  // virtual StringColumn* as_string();
+  virtual IntColumn* as_int() {}
+  virtual BoolColumn*  as_bool() {}
+  virtual FloatColumn* as_float() {}
+  virtual StringColumn* as_string() {}
 
   /** Type appropriate push_back methods. Calling the wrong method is
     * undefined behavior. **/
-  // virtual void push_back(int val);
-  // virtual void push_back(bool val);
-  // virtual void push_back(float val);
-  // virtual void push_back(String* val);
+  virtual void push_back(int val) {
+  }
+
+  virtual void push_back(bool val) {
+
+  }
+  virtual void push_back(float val) {
+
+  }
+  virtual void push_back(String* val) {
+
+  }
 
  /** Returns the number of elements in the column. */
   virtual size_t size() {
@@ -43,7 +58,9 @@ class Column : public Object {
   }
 
   /** Return the type of this column as a char: 'S', 'B', 'I' and 'F'. */
-  char get_type();
+  char get_type() {
+    return *(this -> type_);
+  }
 };
 
 /*************************************************************************
@@ -56,10 +73,12 @@ class IntColumn : public Column {
 
   IntColumn() : Column() {
     array_ = new int* [100];
+    type_ = "I";
   }
 
   IntColumn(int n, ...) : Column(n) {
     array_ = new int* [100];
+    type_ = "I";
     //Number of pointers in this array of pointers
     size_t numArrayPointers = floor(n / 100);
     //Allocates the correct number of array pointers
@@ -79,9 +98,6 @@ class IntColumn : public Column {
     }
 
     va_end(v1);
-    // if(size_ != 0 && size % 100 == 0){
-    //   array_[size % 100] = new int* [100]
-    // }
   }
 
   int get(size_t idx) {
@@ -90,7 +106,9 @@ class IntColumn : public Column {
     return array_[arrPointerIndex][arrIndex];
   }
 
-  IntColumn* as_int();
+  IntColumn* as_int() {
+    return this;
+  }
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, int val) {
@@ -100,6 +118,16 @@ class IntColumn : public Column {
   }
   size_t size() {
     return size_;
+  }
+
+  void push_back(int val) {
+    size_t arrPointerIndex = floor(size_/100);
+    size_t arrIndex = size_ % 100;
+    if(size_ != 0 && arrIndex == 0){
+      array_[arrPointerIndex] = new int [100];
+    }
+    array_[arrPointerIndex][arrIndex] = val;
+    size_++;
   }
 };
 
@@ -113,10 +141,12 @@ class BoolColumn : public Column {
 
   BoolColumn() : Column() {
     array_ = new bool* [100];
+    type_ = "B";
   }
 
   BoolColumn(bool n, ...) : Column(n) {
     array_ = new bool* [100];
+    type_ = "B";
     //Number of pointers in this array of pointers
     size_t numArrayPointers = floor(n / 100);
     //Allocates the correct number of array pointers
@@ -144,7 +174,9 @@ class BoolColumn : public Column {
     return array_[arrPointerIndex][arrIndex];
   }
 
-  BoolColumn* as_bool();
+  BoolColumn* as_bool() {
+    return this;
+  }
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, bool val) {
@@ -154,6 +186,16 @@ class BoolColumn : public Column {
   }
   size_t size() {
     return size_;
+  }
+
+  void push_back(bool val) {
+    size_t arrPointerIndex = floor(size_/100);
+    size_t arrIndex = size_ % 100;
+    if(size_ != 0 && arrIndex == 0){
+      array_[arrPointerIndex] = new bool [100];
+    }
+    array_[arrPointerIndex][arrIndex] = val;
+    size_++;
   }
 };
 
@@ -167,10 +209,12 @@ class FloatColumn : public Column {
 
   FloatColumn() : Column() {
     array_ = new float* [100];
+    type_ = "F";
   }
 
   FloatColumn(float n, ...) : Column(n) {
     array_ = new float* [100];
+    type_ = "F";
     //Number of pointers in this array of pointers
     size_t numArrayPointers = floor(n / 100);
     //Allocates the correct number of array pointers
@@ -199,7 +243,9 @@ class FloatColumn : public Column {
   }
 
 
-  FloatColumn* as_float();
+  FloatColumn* as_float() {
+    return this;
+  }
 
 
   /** Set value at idx. An out of bound idx is undefined.  */
@@ -212,6 +258,16 @@ class FloatColumn : public Column {
 
   size_t size() {
     return size_;
+  }
+
+  void push_back(float val) {
+    size_t arrPointerIndex = floor(size_/100);
+    size_t arrIndex = size_ % 100;
+    if(size_ != 0 && arrIndex == 0){
+      array_[arrPointerIndex] = new float [100];
+    }
+    array_[arrPointerIndex][arrIndex] = val;
+    size_++;
   }
 };
 
@@ -226,10 +282,12 @@ class StringColumn : public Column {
 
   StringColumn() : Column() {
     array_ = new String** [100];
+    type_ = "S";
   }
 
   StringColumn(int n, ...) : Column(n) {
     array_ = new String** [100];
+    type_ = "S";
     //Number of pointers in this array of pointers
     size_t numArrayPointers = floor(n / 100);
     //Allocates the correct number of array pointers
@@ -251,7 +309,9 @@ class StringColumn : public Column {
   }
 
 
-  StringColumn* as_string();
+  StringColumn* as_string() {
+    return this;
+  }
 
   /** Returns the string at idx; undefined on invalid idx.*/
   String* get(size_t idx) {
@@ -269,5 +329,15 @@ class StringColumn : public Column {
   }
   size_t size() {
     return size_;
+  }
+
+  void push_back(String* val) {
+    size_t arrPointerIndex = floor(size_/100);
+    size_t arrIndex = size_ % 100;
+    if(size_ != 0 && arrIndex == 0){
+      array_[arrPointerIndex] = new String* [100];
+    }
+    array_[arrPointerIndex][arrIndex] = val;
+    size_++;
   }
 };
