@@ -12,11 +12,13 @@ class DataFrame : public Object {
  public:
 
   Schema* schema_;
-  Column** dataframe;
+  Column** dataframe_;
 
   /** Create a data frame with the same columns as the given df but with no rows or rownmaes */
   DataFrame(DataFrame& df){
     schema_ = new Schema(df.schema_);
+    dataframe_ = new Column* [100];
+    
   }
 
   /** Create a data frame from a schema and columns. All columns are created
@@ -35,26 +37,26 @@ class DataFrame : public Object {
     * is external, and appears as the last column of the dataframe, the
     * name is optional and external. A nullptr colum is undefined. */
   void add_column(Column* col, String* name){
-    schema_->add_column(col.get_type(), name);
+    schema_->add_column(col->get_type(), name);
 
   }
 
   /** Return the value at the given column and row. Accessing rows or
    *  columns out of bounds, or request the wrong type is undefined.*/
   int get_int(size_t col, size_t row){
-    return dataframe[col]->as_int()->get(row); // NOT CORRECT YET
+    return dataframe_[col]->as_int()->get(row); // NOT CORRECT YET
   }
 
   bool get_bool(size_t col, size_t row){
-    return dataframe[col]->as_bool()->get(row); // NOT CORRECT YET 
+    return dataframe_[col]->as_bool()->get(row); // NOT CORRECT YET 
   }
 
   float get_float(size_t col, size_t row){
-    return dataframe[col]->as_float()->get(row); // NOT CORRECT YET
+    return dataframe_[col]->as_float()->get(row); // NOT CORRECT YET
   }
 
   String*  get_string(size_t col, size_t row){
-    return dataframe[col]->as_string()->get(row); // NOT CORRECT YET
+    return dataframe_[col]->as_string()->get(row); // NOT CORRECT YET
   }
 
   /** Return the offset of the given column name or -1 if no such col. */
@@ -71,12 +73,20 @@ class DataFrame : public Object {
     * If the column is not  of the right type or the indices are out of
     * bound, the result is undefined. */
   void set(size_t col, size_t row, int val){
-    
+    dataframe_[col]->as_int()->set(row, val);
   }
 
-  void set(size_t col, size_t row, bool val)
-  void set(size_t col, size_t row, float val)
-  void set(size_t col, size_t row, String* val)
+  void set(size_t col, size_t row, bool val){
+    dataframe_[col]->as_bool()->set(row, val);
+  }
+
+  void set(size_t col, size_t row, float val){
+    dataframe_[col]->as_float()->set(row, val);
+  }
+
+  void set(size_t col, size_t row, String* val){
+    dataframe_[col]->as_string()->set(row, val);
+  }
 
   /** Set the fields of the given row object with values from the columns at
     * the given offset.  If the row is not form the same schema as the
@@ -89,10 +99,14 @@ class DataFrame : public Object {
   void add_row(Row& row)
 
   /** The number of rows in the dataframe. */
-  size_t nrows()
+  size_t nrows(){
+    return schema_->length();
+  }
 
   /** The number of columns in the dataframe.*/
-  size_t ncols()
+  size_t ncols(){
+    return schema_->width();
+  }
 
   /** Visit rows in order */
   void map(Rower& r)
