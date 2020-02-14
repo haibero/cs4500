@@ -62,6 +62,7 @@ class Column : public Object {
     return *(this -> type_);
   }
 
+  /** Returns the index of the pointer array in the array of pointer arrays*/
   size_t getPointerIndex(size_t size) {
     if(size == 0) {
       return 0;
@@ -69,6 +70,7 @@ class Column : public Object {
     return floor(log2(size));
   }
 
+  /** Returns the index of the array in the array of pointers/*/
   size_t getArrIndex(size_t size) {
     return (size % (int)(pow(2.0, getPointerIndex(size))));
   }
@@ -84,7 +86,7 @@ class IntColumn : public Column {
 
   IntColumn() : Column() {
     //Starting with 100 points
-    array_ = new int* [32];
+    array_ = new int* [100];
     size_t arrPointerIndex = getPointerIndex(size_);
     size_t arrIndex = getArrIndex(size_);
     for(size_t i = 0; i <= arrPointerIndex; i++){
@@ -388,8 +390,4 @@ class StringColumn : public Column {
     array_[arrPointerIndex][arrIndex] = val;
     size_++;
   }
-
-  // void resize() {
-  //   String*** tempArr =
-  // }
 };
