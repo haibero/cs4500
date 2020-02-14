@@ -27,7 +27,24 @@ class DataFrame : public Object {
       size_t indexForEach = pow(2.0, i);
       dataframe_[i] = new Column* [indexForEach];
       for(int j = 0; j < indexForEach; j++){
-        dataframe_[i][j] = new IntColumn();
+        if(schema_->col_type(i) == 'I'){
+          dataframe_[i][j] = new IntColumn();
+          continue;
+        }
+        if(schema_->col_type(i) == 'S'){
+          dataframe_[i][j] = new StringColumn();
+          continue;
+        }
+        if(schema_->col_type(i) == 'B'){
+          dataframe_[i][j] = new BoolColumn();
+          continue;
+        }
+        if(schema_->col_type(i) == 'F'){
+          dataframe_[i][j] = new FloatColumn();
+          continue;
+        }
+      
+        //dataframe_[i][j] = new IntColumn();
       }
     }
   }
@@ -43,7 +60,23 @@ class DataFrame : public Object {
       size_t indexForEach = pow(2.0, i);
       dataframe_[i] = new Column* [indexForEach];
       for(int j = 0; j < indexForEach; j++){
-        dataframe_[i][j] = new IntColumn();
+        if(schema_->col_type(i) == 'I'){
+          dataframe_[i][j] = new IntColumn();
+          continue;
+        }
+        if(schema_->col_type(i) == 'S'){
+          dataframe_[i][j] = new StringColumn();
+          continue;
+        }
+        if(schema_->col_type(i) == 'B'){
+          dataframe_[i][j] = new BoolColumn();
+          continue;
+        }
+        if(schema_->col_type(i) == 'F'){
+          dataframe_[i][j] = new FloatColumn();
+          continue;
+        }
+        //dataframe_[i][j] = new IntColumn();
       }
     }
   }

@@ -70,15 +70,19 @@ void test() {
     }else{
       r.set(4, false);
     }
-    
     df.add_row(r);
+    if(df.get_bool(i,4)){
+      printf("true\n");
+    }else{
+      printf("false\n");
+    }
   }
 
-  if(df.get_bool(3,4)){
-    printf("true\n");
-  }else{
-    printf("false\n");
-  }
+  // if(df.get_bool(3,4)){
+  //   printf("true\n");
+  // }else{
+  //   printf("false\n");
+  // }
 
   // Schema s("II");
   // DataFrame df(s);
