@@ -1,6 +1,10 @@
+#pragma once
 #include "../object.h"
 #include "column.h"
 #include "schema.h"
+#include "row.h"
+#include "rower.h"
+#include "printRower.h"
 /****************************************************************************
  * DataFrame::
  *
@@ -45,12 +49,12 @@ class DataFrame : public Object {
     * is external, and appears as the last column of the dataframe, the
     * name is optional and external. A nullptr colum is undefined. */
   void add_column(Column* col, String* name){
-    size_t indexColPointer = floor((schema_ -> width_) / 100);
+    size_t indexColPointers = floor((schema_ -> width_) / 100);
     size_t indexCol = (schema_ -> width_) % 100;
     if(schema_->width_ != 0 && indexCol == 0){
-      dataframe_[indexColPointer] = new Column* [100];
+      dataframe_[indexColPointers] = new Column* [100];
     }
-    dataframe_[indexColPointer][indexCol] = col;
+    dataframe_[indexColPointers][indexCol] = col;
     schema_->add_column(col->get_type(), name);
   }
 
@@ -116,17 +120,58 @@ class DataFrame : public Object {
     size_t indexCol = col % 100;
     dataframe_[indexColPointers][indexCol]->as_string()->set(row, val);
   }
-  //
-  // /** Set the fields of the given row object with values from the columns at
-  //   * the given offset.  If the row is not form the same schema as the
-  //   * dataframe, results are undefined.
-  //   */
-  // void fill_row(size_t idx, Row& row)
-  //
+
+  /** Set the fields of the given row object with values from the columns at
+    * the given offset.  If the row is not form the same schema as the
+    * dataframe, results are undefined.
+    */
+  void fill_row(size_t idx, Row& row) {
+    for(size_t i = 0; i < schema_ -> width(); i++) {
+      if(row.col_type(i) == 'I'){
+        row.set(i, get_int(i, idx));
+        continue;
+      }
+      if(row.col_type(i) == 'S'){
+        row.set(i, get_string(i, idx));
+        continue;
+      }
+      if(row.col_type(i) == 'B'){
+        row.set(i, get_bool(i, idx));
+        continue;
+      }
+      if(row.col_type(i) == 'F'){
+        row.set(i,get_float(i, idx));
+        continue;
+      }
+    }
+  }
+
   // /** Add a row at the end of this dataframe. The row is expected to have
   //  *  the right schema and be filled with values, otherwise undedined.  */
-  // void add_row(Row& row)
-  //
+  void add_row(Row& row){
+    schema_->add_row(nullptr);
+    for(size_t i = 0; i < schema_ -> width(); i++) {
+      size_t indexColPointers = floor(i / 100);
+      size_t indexCol = i % 100;
+      if(row.col_type(i) == 'I'){
+        dataframe_[indexColPointers][indexCol] -> push_back(row.get_int(i));
+        continue;
+      }
+      if(row.col_type(i) == 'S'){
+        dataframe_[indexColPointers][indexCol] -> push_back(row.get_string(i));
+        continue;
+      }
+      if(row.col_type(i) == 'B'){
+        dataframe_[indexColPointers][indexCol] -> push_back(row.get_bool(i));
+        continue;
+      }
+      if(row.col_type(i) == 'F'){
+        dataframe_[indexColPointers][indexCol] -> push_back(row.get_float(i));
+        continue;
+      }
+    }
+  }
+
   /** The number of rows in the dataframe. */
   size_t nrows(){
     return schema_->length();
@@ -136,14 +181,36 @@ class DataFrame : public Object {
   size_t ncols(){
     return schema_->width();
   }
-  //
-  // /** Visit rows in order */
-  // void map(Rower& r)
-  //
-  // /** Create a new dataframe, constructed from rows for which the given Rower
-  //   * returned true from its accept method. */
-  // DataFrame* filter(Rower& r)
-  //
-  // /** Print the dataframe in SoR format to standard output. */
-  // void print()
+
+  /** Visit rows in order */
+  void map(Rower& r) {
+    for(size_t i = 0; i < schema_ -> length(); i++) {
+      Row* tempRow = new Row(*schema_);
+      fill_row(i, *tempRow);
+      r.accept(*tempRow);
+    }
+  }
+
+  /** Create a new dataframe, constructed from rows for which the given Rower
+    * returned true from its accept method. */
+  DataFrame* filter(Rower& r) {
+    DataFrame* tempDf = new DataFrame(*schema_);
+    for(size_t i = 0; i < schema_ -> length(); i++) {
+      Row* tempRow = new Row(*schema_);
+      tempDf->fill_row(i, *tempRow);
+
+      if(r.accept(*tempRow)){
+        tempDf->add_row(*tempRow);
+      }
+    }
+    return tempDf;
+
+  }
+
+  /** Print the dataframe in SoR format to standard output. */
+  void print() {
+    PrintRower* pRow = new PrintRower();
+    map(*pRow);
+  }
+
 };

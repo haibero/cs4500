@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <string.h>
 #include "../string.h"
@@ -21,8 +22,6 @@ class Schema : public Object {
     columnTypes_ = from.columnTypes_;
     columnNames_ = from.columnNames_;
     width_ = from.width_;
-    printf("Wdith schema: %s\n", from.columnTypes_);
-    printf("Wdith schema: %s\n", columnTypes_);
   }
 
   Schema(Schema& from, bool add_row_info): Schema(from) {
@@ -55,9 +54,9 @@ class Schema : public Object {
     * is external. Names are expectd to be unique, duplicates result
     * in undefined behavior. */
   void add_column(char typ, String* name) {
-    width_++;
     columnNames_[width_] = name;
     columnTypes_[width_] = typ;
+    width_++;
   }
 
   /** Add a row with a name (possibly nullptr), name is external.  Names are

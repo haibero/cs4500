@@ -112,6 +112,7 @@ class IntColumn : public Column {
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, int val) {
+    printf("Set in columns: %d\n", val);
     size_t arrPointerIndex = floor(idx/100);
     size_t arrIndex = idx%100;
     array_[arrPointerIndex][arrIndex] = val;
@@ -144,7 +145,7 @@ class BoolColumn : public Column {
     type_ = "B";
   }
 
-  BoolColumn(bool n, ...) : Column(n) {
+  BoolColumn(int n, ...) : Column(n) {
     array_ = new bool* [100];
     type_ = "B";
     //Number of pointers in this array of pointers
@@ -212,7 +213,7 @@ class FloatColumn : public Column {
     type_ = "F";
   }
 
-  FloatColumn(float n, ...) : Column(n) {
+  FloatColumn(int n, ...) : Column(n) {
     array_ = new float* [100];
     type_ = "F";
     //Number of pointers in this array of pointers
