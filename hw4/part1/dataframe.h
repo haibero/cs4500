@@ -14,7 +14,6 @@
  */
 class DataFrame : public Object {
  public:
-
   Schema* schema_;
   Column*** dataframe_;
 
@@ -22,11 +21,12 @@ class DataFrame : public Object {
   DataFrame(DataFrame& df){
     schema_ = new Schema(*df.schema_);
     dataframe_ = new Column** [100];
-    size_t numColPointers = floor((schema_ -> width_) / 100);
-    size_t numCol = (schema_ -> width_) % 100;
+    size_t numColPointers = getPointerIndex(schema_ -> width_);
+    size_t numCol = getArrIndex(schema_ -> width_);
     for(int i = 0; i <= numColPointers; i++){
-      dataframe_[i] = new Column* [100];
-      for(int j = 0; j < numCol; j++){
+      size_t indexForEach = pow(2.0, i);
+      dataframe_[i] = new Column* [indexForEach];
+      for(int j = 0; j < indexForEach; j++){
         dataframe_[i][j] = new IntColumn();
       }
     }
@@ -37,11 +37,12 @@ class DataFrame : public Object {
   DataFrame(Schema& schema){
     schema_ = new Schema(schema);
     dataframe_ = new Column** [100];
-    size_t numColPointers = floor((schema_ -> width_) / 100);
-    size_t numCol = (schema_ -> width_) % 100;
+    size_t numColPointers = getPointerIndex(schema_ -> width_);
+    size_t numCol = getArrIndex(schema_ -> width_);
     for(int i = 0; i <= numColPointers; i++){
-      dataframe_[i] = new Column* [100];
-      for(int j = 0; j < numCol; j++){
+      size_t indexForEach = pow(2.0, i);
+      dataframe_[i] = new Column* [indexForEach];
+      for(int j = 0; j < indexForEach; j++){
         dataframe_[i][j] = new IntColumn();
       }
     }
@@ -57,10 +58,11 @@ class DataFrame : public Object {
     * is external, and appears as the last column of the dataframe, the
     * name is optional and external. A nullptr colum is undefined. */
   void add_column(Column* col, String* name){
-    size_t indexColPointers = floor((schema_ -> width_) / 100);
-    size_t indexCol = (schema_ -> width_) % 100;
+    size_t indexColPointers = getPointerIndex(schema_ -> width_);
+    size_t indexCol = getArrIndex(schema_ -> width_);
     if(schema_->width_ != 0 && indexCol == 0){
-      dataframe_[indexColPointers] = new Column* [100];
+      size_t newIndex = pow(2.0, indexColPointers);
+      dataframe_[indexColPointers] = new Column* [newIndex];
     }
     dataframe_[indexColPointers][indexCol] = col;
     schema_->add_column(col->get_type(), name);
@@ -69,26 +71,26 @@ class DataFrame : public Object {
   /** Return the value at the given column and row. Accessing rows or
    *  columns out of bounds, or request the wrong type is undefined.*/
   int get_int(size_t col, size_t row){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     return dataframe_[indexColPointers][indexCol]->as_int()->get(row);
   }
 
   bool get_bool(size_t col, size_t row){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     return dataframe_[indexColPointers][indexCol]->as_bool()->get(row);
   }
 
   float get_float(size_t col, size_t row){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     return dataframe_[indexColPointers][indexCol]->as_float()->get(row);
   }
 
   String*  get_string(size_t col, size_t row){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     return dataframe_[indexColPointers][indexCol]->as_string()->get(row);
   }
 
@@ -106,26 +108,26 @@ class DataFrame : public Object {
     * If the column is not  of the right type or the indices are out of
     * bound, the result is undefined. */
   void set(size_t col, size_t row, int val){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     dataframe_[indexColPointers][indexCol]->as_int()->set(row, val);
   }
 
   void set(size_t col, size_t row, bool val){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     dataframe_[indexColPointers][indexCol]->as_bool()->set(row, val);
   }
 
   void set(size_t col, size_t row, float val){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     dataframe_[indexColPointers][indexCol]->as_float()->set(row, val);
   }
 
   void set(size_t col, size_t row, String* val){
-    size_t indexColPointers = floor(col / 100);
-    size_t indexCol = col % 100;
+    size_t indexColPointers = getPointerIndex(col);
+    size_t indexCol = getArrIndex(col);
     dataframe_[indexColPointers][indexCol]->as_string()->set(row, val);
   }
 
@@ -160,8 +162,8 @@ class DataFrame : public Object {
     schema_->add_row(nullptr);
     for(size_t i = 0; i < schema_ -> width(); i++) {
 
-      size_t indexColPointers = floor(i / 100);
-      size_t indexCol = i % 100;
+      size_t indexColPointers = getPointerIndex(i);
+      size_t indexCol = getArrIndex(i);
       if(row.col_type(i) == 'I'){
         dataframe_[indexColPointers][indexCol]-> push_back(row.get_int(i));
         continue;
@@ -220,6 +222,17 @@ class DataFrame : public Object {
   void print() {
     PrintRower* pRow = new PrintRower();
     map(*pRow);
+  }
+
+  size_t getPointerIndex(size_t size) {
+    if(size == 0) {
+      return 0;
+    }
+    return floor(log2(size));
+  }
+
+  size_t getArrIndex(size_t size) {
+    return (size % (int)(pow(2.0, getPointerIndex(size))));
   }
 
 };
