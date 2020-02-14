@@ -17,27 +17,28 @@ class Row : public Object {
   size_t idx_;
   /** Build a row following a schema. */
   Row(Schema& scm){
-    cells_ = new Column* [scm.width()];
     schema_ = &scm;
+    cells_ = new Column* [scm.width()];
   }
 
   /** Setters: set the given column with the given value. Setting a column with
     * a value of the wrong type is undefined. */
   void set(size_t col, int val){
-    printf("Set Val:%d\n", val);
-    printf("Set Schema Width: %d\n", schema_ -> width());
-    cells_[col] = new IntColumn(1);
+    cells_[col] = new IntColumn();
     cells_[col]->as_int()->set(0, val);
   }
 
   void set(size_t col, float val){
+    cells_[col] = new FloatColumn();
     cells_[col]->as_float()->set(0, val);
   }
   void set(size_t col, bool val){
+    cells_[col] = new BoolColumn();
     cells_[col]->as_bool()->set(0, val);
   }
   /** The string is external. */
   void set(size_t col, String* val){
+    cells_[col] = new StringColumn();
     cells_[col]->as_string()->set(0, val);
   }
 
@@ -54,18 +55,18 @@ class Row : public Object {
   /** Getters: get the value at the given column. If the column is not
     * of the requested type, the result is undefined. */
   int get_int(size_t col){
-    cells_[col]->as_int()->get(0);
+    return cells_[col]->as_int()->get(0);
   }
 
   bool get_bool(size_t col){
-    cells_[col]->as_bool()->get(0);
+    return cells_[col]->as_bool()->get(0);
   }
   float get_float(size_t col){
-    cells_[col]->as_float()->get(0);
+    return cells_[col]->as_float()->get(0);
   }
 
   String* get_string(size_t col){
-    cells_[col]->as_string()->get(0);
+    return cells_[col]->as_string()->get(0);
   }
 
 

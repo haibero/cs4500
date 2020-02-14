@@ -63,7 +63,9 @@ class Schema : public Object {
    *  expectd to be unique, duplicates result in undefined behavior. */
   void add_row(String* name) {
     length_++;
-    rowNames_[length_] = name;
+    if(name != nullptr){
+      rowNames_[length_] = name;
+    }
   }
 
   /** Return name of row at idx; nullptr indicates no name. An idx >= width

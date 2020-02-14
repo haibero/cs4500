@@ -23,8 +23,12 @@ class DataFrame : public Object {
     schema_ = new Schema(*df.schema_);
     dataframe_ = new Column** [100];
     size_t numColPointers = floor((schema_ -> width_) / 100);
+    size_t numCol = (schema_ -> width_) % 100;
     for(int i = 0; i <= numColPointers; i++){
       dataframe_[i] = new Column* [100];
+      for(int j = 0; j < numCol; j++){
+        dataframe_[i][j] = new IntColumn();
+      }
     }
   }
 
@@ -34,8 +38,12 @@ class DataFrame : public Object {
     schema_ = new Schema(schema);
     dataframe_ = new Column** [100];
     size_t numColPointers = floor((schema_ -> width_) / 100);
+    size_t numCol = (schema_ -> width_) % 100;
     for(int i = 0; i <= numColPointers; i++){
       dataframe_[i] = new Column* [100];
+      for(int j = 0; j < numCol; j++){
+        dataframe_[i][j] = new IntColumn();
+      }
     }
   }
 
@@ -151,10 +159,11 @@ class DataFrame : public Object {
   void add_row(Row& row){
     schema_->add_row(nullptr);
     for(size_t i = 0; i < schema_ -> width(); i++) {
+
       size_t indexColPointers = floor(i / 100);
       size_t indexCol = i % 100;
       if(row.col_type(i) == 'I'){
-        dataframe_[indexColPointers][indexCol] -> push_back(row.get_int(i));
+        dataframe_[indexColPointers][indexCol]-> push_back(row.get_int(i));
         continue;
       }
       if(row.col_type(i) == 'S'){

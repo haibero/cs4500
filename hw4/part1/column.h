@@ -73,6 +73,9 @@ class IntColumn : public Column {
 
   IntColumn() : Column() {
     array_ = new int* [100];
+    for(size_t i = 0; i < 100; i++){
+      array_[i] = new int [100];
+    }
     type_ = "I";
   }
 
@@ -112,7 +115,6 @@ class IntColumn : public Column {
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, int val) {
-    printf("Set in columns: %d\n", val);
     size_t arrPointerIndex = floor(idx/100);
     size_t arrIndex = idx%100;
     array_[arrPointerIndex][arrIndex] = val;
@@ -142,6 +144,9 @@ class BoolColumn : public Column {
 
   BoolColumn() : Column() {
     array_ = new bool* [100];
+    for(size_t i = 0; i < 100; i++){
+      array_[i] = new bool [100];
+    }
     type_ = "B";
   }
 
@@ -210,6 +215,9 @@ class FloatColumn : public Column {
 
   FloatColumn() : Column() {
     array_ = new float* [100];
+    for(size_t i = 0; i < 100; i++){
+      array_[i] = new float [100];
+    }
     type_ = "F";
   }
 
@@ -283,6 +291,9 @@ class StringColumn : public Column {
 
   StringColumn() : Column() {
     array_ = new String** [100];
+    for(size_t i = 0; i < 100; i++){
+      array_[i] = new String* [100];
+    }
     type_ = "S";
   }
 
@@ -341,4 +352,8 @@ class StringColumn : public Column {
     array_[arrPointerIndex][arrIndex] = val;
     size_++;
   }
+
+  // void resize() {
+  //   String*** tempArr =
+  // }
 };
