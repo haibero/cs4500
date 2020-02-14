@@ -8,16 +8,30 @@
   ASSERT_EXIT(a(), ::testing::ExitedWithCode(0), ".*")
 
 void test() {
-  Schema s("II");
+  Schema s("SSIFF");
 
   DataFrame df(s);
-  Row  r(df.get_schema());
-  for(size_t i = 0; i <  1000 * 1000; i++) {
-    r.set(0,(int)i);
-    r.set(1,(int)i+1);
-    df.add_row(r);
+  for(size_t i = 0; i <  50; i++) {
+    if(i % 2 == 0){
+      IntColumn* i = new IntColumn();
+      df.add_column(i, nullptr);
+    }else{
+      if (i % 3 == 0)
+      {
+        BoolColumn* b = new BoolColumn();
+        df.add_column(b, nullptr);
+      }else{
+        StringColumn* s = new StringColumn();
+        df.add_column(s, nullptr);
+      }
+    }
   }
-  GT_EQUALS(df.get_int((size_t)0,1), 1);
+  GT_EQUALS(s.col_type(5+2), 'I');
+  GT_EQUALS(s.col_type(5+4), 'I');
+  GT_EQUALS(s.col_type(5+3), 'B');
+  GT_EQUALS(s.col_type(5+9), 'B');
+  GT_EQUALS(s.col_type(5+19), 'S');
+  GT_EQUALS(s.col_type(5+23), 'S');
   exit(0);
 }
 
