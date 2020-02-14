@@ -61,6 +61,17 @@ class Column : public Object {
   char get_type() {
     return *(this -> type_);
   }
+
+  size_t getPointerIndex(size_t size) {
+    if(size == 0) {
+      return 0;
+    }
+    return floor(log2(size));
+  }
+
+  size_t getArrIndex(size_t size) {
+    return (size % (int)(pow(2.0, getPointerIndex(size))));
+  }
 };
 
 /*************************************************************************
@@ -73,13 +84,13 @@ class IntColumn : public Column {
 
   IntColumn() : Column() {
     //Starting with 100 points
-    array_ = new int* [100];
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    array_ = new int* [32];
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     for(size_t i = 0; i <= arrPointerIndex; i++){
-      size_t indexForEach = pow(2.0, i);
+      size_t indexForEach = pow(2.0, (double)i);
       array_[i] = new int [indexForEach];
-    }
+      }
     type_ = "I";
   }
 
@@ -88,7 +99,7 @@ class IntColumn : public Column {
     type_ = "I";
     //Number of pointers in this array of pointers
     //size_t numArrayPointers = floor(n / 100);
-    size_t numArrayPointers = floor(log2(size_));
+    size_t numArrayPointers = getPointerIndex(size_);
     //Allocates the correct number of array pointers
     for(int i = 0; i <= numArrayPointers; i++){
       size_t indexForEach = pow(2.0, i);
@@ -101,8 +112,8 @@ class IntColumn : public Column {
 
     //Fills the array of array pointers
     for(int i = 0; i <= n; i++) {
-      size_t arrPointerIndex = floor(log2(i));
-      size_t arrIndex = (i % (int)(pow(2.0, arrPointerIndex)));
+      size_t arrPointerIndex = getPointerIndex(i);
+      size_t arrIndex = getArrIndex(i);
       array_[arrPointerIndex][arrIndex] = va_arg(v1, int);
     }
 
@@ -110,8 +121,8 @@ class IntColumn : public Column {
   }
 
   int get(size_t idx) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx %  (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     return array_[arrPointerIndex][arrIndex];
   }
 
@@ -121,8 +132,8 @@ class IntColumn : public Column {
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, int val) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     array_[arrPointerIndex][arrIndex] = val;
   }
   size_t size() {
@@ -130,8 +141,8 @@ class IntColumn : public Column {
   }
 
   void push_back(int val) {
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     if(size_ != 0 && arrIndex == 0){
       size_t newIndex = pow(2.0, arrPointerIndex);
       array_[arrPointerIndex] = new int [newIndex];
@@ -152,8 +163,8 @@ class BoolColumn : public Column {
   BoolColumn() : Column() {
     //Starting with 100 points
     array_ = new bool* [100];
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     for(size_t i = 0; i <= arrPointerIndex; i++){
       size_t indexForEach = pow(2.0, i);
       array_[i] = new bool [indexForEach];
@@ -166,7 +177,7 @@ class BoolColumn : public Column {
     type_ = "B";
     //Number of pointers in this array of pointers
     //size_t numArrayPointers = floor(n / 100);
-    size_t numArrayPointers = floor(log2(size_));
+    size_t numArrayPointers = getPointerIndex(size_);
     //Allocates the correct number of array pointers
     for(int i = 0; i <= numArrayPointers; i++){
       size_t indexForEach = pow(2.0, i);
@@ -179,8 +190,8 @@ class BoolColumn : public Column {
 
     //Fills the array of array pointers
     for(int i = 0; i <= n; i++) {
-      size_t arrPointerIndex = floor(log2(i));
-      size_t arrIndex = (i % (int)(pow(2.0, arrPointerIndex)));
+      size_t arrPointerIndex = getPointerIndex(i);
+      size_t arrIndex = getArrIndex(i);
       array_[arrPointerIndex][arrIndex] = va_arg(v1, int);
     }
 
@@ -188,8 +199,8 @@ class BoolColumn : public Column {
     }
 
   bool get(size_t idx) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx %  (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     return array_[arrPointerIndex][arrIndex];
   }
 
@@ -199,8 +210,8 @@ class BoolColumn : public Column {
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, bool val) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     array_[arrPointerIndex][arrIndex] = val;
   }
   size_t size() {
@@ -208,8 +219,8 @@ class BoolColumn : public Column {
   }
 
   void push_back(int val) {
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     if(size_ != 0 && arrIndex == 0){
       size_t newIndex = pow(2.0, arrPointerIndex);
       array_[arrPointerIndex] = new bool [newIndex];
@@ -229,8 +240,8 @@ class FloatColumn : public Column {
 
   FloatColumn() : Column() {
     array_ = new float* [100];
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     for(size_t i = 0; i <= arrPointerIndex; i++){
       size_t indexForEach = pow(2.0, i);
       array_[i] = new float [indexForEach];
@@ -241,8 +252,7 @@ class FloatColumn : public Column {
     array_ = new float* [100];
     type_ = "F";
     //Number of pointers in this array of pointers
-    //size_t numArrayPointers = floor(n / 100);
-    size_t numArrayPointers = floor(log2(size_));
+    size_t numArrayPointers = getPointerIndex(size_);
     //Allocates the correct number of array pointers
     for(int i = 0; i <= numArrayPointers; i++){
       size_t indexForEach = pow(2.0, i);
@@ -255,8 +265,8 @@ class FloatColumn : public Column {
 
     //Fills the array of array pointers
     for(int i = 0; i <= n; i++) {
-      size_t arrPointerIndex = floor(log2(i));
-      size_t arrIndex = (i % (int)(pow(2.0, arrPointerIndex)));
+      size_t arrPointerIndex = getPointerIndex(i);
+      size_t arrIndex = getArrIndex(i);
       array_[arrPointerIndex][arrIndex] = va_arg(v1, int);
     }
 
@@ -265,8 +275,8 @@ class FloatColumn : public Column {
 
 
   float get(size_t idx) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx %  (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     return array_[arrPointerIndex][arrIndex];
   }
 
@@ -278,8 +288,8 @@ class FloatColumn : public Column {
 
   /** Set value at idx. An out of bound idx is undefined.  */
   void set(size_t idx, float val) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     array_[arrPointerIndex][arrIndex] = val;
   }
 
@@ -289,8 +299,8 @@ class FloatColumn : public Column {
   }
 
   void push_back(float val) {
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     if(size_ != 0 && arrIndex == 0){
       size_t newIndex = pow(2.0, arrPointerIndex);
       array_[arrPointerIndex] = new float [newIndex];
@@ -312,8 +322,8 @@ class StringColumn : public Column {
   StringColumn() : Column() {
     //Starting with 100 points
     array_ = new String** [100];
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     for(size_t i = 0; i <= arrPointerIndex; i++){
       size_t indexForEach = pow(2.0, i);
       array_[i] = new String* [indexForEach];
@@ -325,7 +335,7 @@ class StringColumn : public Column {
     array_ = new String** [100];
     type_ = "S";
     //Number of pointers in this array of pointers
-    size_t numArrayPointers = floor(log2(size_));
+    size_t numArrayPointers = getPointerIndex(size_);
     //Allocates the correct number of array pointers
     for(size_t i = 0; i <= numArrayPointers; i++){
       size_t indexForEach = pow(2.0, i);
@@ -338,8 +348,8 @@ class StringColumn : public Column {
 
     //Fills the array of array pointers
     for(size_t i = 0; i <= n; i++) {
-      size_t arrPointerIndex = floor(log2(i));
-      size_t arrIndex = (i % (int)(pow(2.0, arrPointerIndex)));
+      size_t arrPointerIndex = getPointerIndex(i);
+      size_t arrIndex = getArrIndex(i);
       array_[arrPointerIndex][arrIndex] = va_arg(v1, String*);
     }
     va_end(v1);
@@ -352,16 +362,16 @@ class StringColumn : public Column {
 
   /** Returns the string at idx; undefined on invalid idx.*/
   String* get(size_t idx) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx %  (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     return array_[arrPointerIndex][arrIndex];
   }
 
 
   /** Out of bound idx is undefined. */
   void set(size_t idx, String* val) {
-    size_t arrPointerIndex = floor(log2(idx));
-    size_t arrIndex = (idx % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(idx);
+    size_t arrIndex = getArrIndex(idx);
     array_[arrPointerIndex][arrIndex] = val;
   }
   size_t size() {
@@ -369,8 +379,8 @@ class StringColumn : public Column {
   }
 
   void push_back(String* val) {
-    size_t arrPointerIndex = floor(log2(size_));
-    size_t arrIndex = (size_ % (int)(pow(2.0, arrPointerIndex)));
+    size_t arrPointerIndex = getPointerIndex(size_);
+    size_t arrIndex = getArrIndex(size_);
     if(size_ != 0 && arrIndex == 0){
       size_t newIndex = pow(2.0, arrPointerIndex);
       array_[arrPointerIndex] = new String* [newIndex];
