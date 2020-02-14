@@ -218,7 +218,8 @@ class BoolColumn : public Column {
     return size_;
   }
 
-  void push_back(int val) {
+  void push_back(bool val) {
+    printf("HITTING PUSH BACK\n");
     size_t arrPointerIndex = getPointerIndex(size_);
     size_t arrIndex = getArrIndex(size_);
     if(size_ != 0 && arrIndex == 0){

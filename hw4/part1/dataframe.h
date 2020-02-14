@@ -165,7 +165,7 @@ class DataFrame : public Object {
       size_t indexColPointers = getPointerIndex(i);
       size_t indexCol = getArrIndex(i);
       if(row.col_type(i) == 'I'){
-        dataframe_[indexColPointers][indexCol]-> push_back(row.get_int(i));
+        dataframe_[indexColPointers][indexCol] -> push_back(row.get_int(i));
         continue;
       }
       if(row.col_type(i) == 'S'){
